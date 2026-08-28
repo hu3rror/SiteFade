@@ -78,14 +78,15 @@ pnpm zip             # Chromium build and zip
 pnpm zip:firefox     # Firefox build and zip
 ```
 
-Releases are automated through GitHub Actions. Push a tag:
+Releases are automated through GitHub Actions. Cut a version:
 
 ```bash
-git tag v0.1.0       # must equal the "version" in package.json
-git push origin v0.1.0
+pnpm version patch  # bump version + commit + create v* tag in one step
+# pnpm version minor | major  (or a literal version: pnpm version 0.2.0)
+git push --follow-tags
 ```
 
-The workflow type-checks, runs the tests, builds and zips both browsers, and creates a draft release with the three zips attached and notes generated from the commit history. Open the draft, take a look, publish. Tags that do not match the version in `package.json` are rejected on purpose, because the zip filenames embed that version.
+`pnpm version` writes `package.json`, commits it, and creates an annotated `v*` tag, so the two can never get out of sync. The workflow then type-checks, runs the tests, builds and zips both browsers, and creates a draft release with the three zips attached and notes generated from the commit history. Open the draft, take a look, publish. Tags that do not match the version in `package.json` are rejected on purpose, because the zip filenames embed that version.
 
 ## Privacy
 

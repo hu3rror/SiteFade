@@ -78,14 +78,15 @@ pnpm zip             # Chromium 构建并打包
 pnpm zip:firefox     # Firefox 构建并打包
 ```
 
-发布由 GitHub Actions 自动完成。推一个 tag：
+发布由 GitHub Actions 自动完成。发版就两条命令：
 
 ```bash
-git tag v0.1.0       # 必须与 package.json 里的 version 一致
-git push origin v0.1.0
+pnpm version patch  # 改 version + commit + 打 v* tag，一步完成
+# pnpm version minor | major（或直接写版本号：pnpm version 0.2.0）
+git push --follow-tags
 ```
 
-工作流会跑类型检查、单测，构建并打包两个浏览器，然后把三个 zip 挂到一个草稿 release 上，release notes 从提交历史自动生成。去 Releases 页核对后发布即可。tag 和 package.json 版本不一致会被故意拦下，因为 zip 文件名里嵌的就是这个版本。
+`pnpm version` 改 `package.json`、提交、再打带注释的 `v*` tag，三者一次产出，从根上杜绝了「tag 和 version 对不上」。工作流随后会跑类型检查、单测，构建并打包两个浏览器，然后把三个 zip 挂到一个草稿 release 上，release notes 从提交历史自动生成。去 Releases 页核对后发布即可。tag 和 package.json 版本不一致仍会被拦下，这是保留的保险，因为 zip 文件名里嵌的就是这个版本。
 
 ## 隐私
 
