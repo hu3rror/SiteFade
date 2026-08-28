@@ -1,0 +1,68 @@
+/**
+ * 远程源拉取（票 07）：fetch + 响应上限 + 逐行同本地校验。
+ * 纯数据解析，从不执行。纯 TS，可单测（依赖注入 fetch）。
+ */
+
+import { MAX_RESPONSE_BYTES, FETCH_TIMEOUT_MS } from '../constants';
+import { parseRules } from '../rules/parser';
+
+export type FetchKind = 'ok' | 'network' | 'http' | 'parse';
+
+export interface FetchOutcome {
+  ok: boolean;
+  kind: FetchKind;
+  detail?: string;
+  /** 成功时：规范化去重后的规则文本。 */
+  rules?: string[];
+  summary?: { added: number; duplicate: number; invalid: number };
+}
+
+export type FetchFn = (url: string, init: { signal: AbortSignal; cache: RequestCache }) => Promise<Response>;
+
+/** 拉取远程清单。默认用全局 fetch；测试可注入。 */
+export async function fetchSourceList(url: string, fetchFn: FetchFn = fetch): Promise<FetchOutcome> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let resp: Response;
+  try {
+    resp = await fetchFn(url, { signal: controller.signal, cache: 'no-store' });
+  } catch (e) {
+    const msg = controller.signal.aborted ? '请求超时' : e instanceof Error ? e.message : '网络错误';
+    return { ok: false, kind: 'network', detail: msg };
+  } finally {
+    clearTimeout(timer);
+  }
+
+  try {
+    if (!resp.ok) return { ok: false, kind: 'http', detail: `HTTP ${resp.status}` };
+    const contentLength = resp.headers.get('content-length');
+    if (contentLength && Number(contentLength) > MAX_RESPONSE_BYTES) {
+      return { ok: false, kind: 'parse', detail: '响应超过 2MB 上限' };
+    }
+    const text = await resp.text();
+    // 字节级校验（UTF-8）；text.length 是 UTF-16 码元数，中文会低估。
+    if (new TextEncoder().encode(text).length > MAX_RESPONSE_BYTES) {
+      return { ok: false, kind: 'parse', detail: '响应超过 2MB 上限' };
+    }
+    const parsed = parseRules(text);
+    return {
+      ok: true,
+      kind: 'ok',
+      rules: parsed.rules.map((r) => r.text),
+      summary: { added: parsed.added, duplicate: parsed.duplicate, invalid: parsed.invalid },
+    };
+  } catch (e) {
+    return { ok: false, kind: 'network', detail: e instanceof Error ? e.message : '读取响应失败' };
+  }
+}
+
+/** 从源 URL 推导可选 host 权限模式（按源授权，不用 <all_urls>）。 */
+export function originPermissionPattern(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    return `${u.protocol}//${u.host}/*`;
+  } catch {
+    return null;
+  }
+}
