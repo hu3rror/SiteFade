@@ -1,16 +1,13 @@
 /**
  * 匹配器测试（票 08 / CONTEXT.md 通配符与匹配语义）。
- * 用 parseLine 构造 SourceRule，验证命中判定矩阵。
+ * compile 直接消费规范文本（票 04：解析在编译处一次）。
  */
 import { describe, it, expect } from 'vitest';
-import { compile } from './compile';
-import { parseLine, type ParsedRule } from '../rules/parser';
+import { compile, type SourceRule } from './compile';
 import type { SourceRef } from '../types';
 
-function src(text: string, source: SourceRef = 'manual'): ParsedRule & { source: SourceRef } {
-  const p = parseLine(text);
-  if (!p || 'error' in p) throw new Error(`bad rule: ${text}`);
-  return { ...p, source };
+function src(text: string, source: SourceRef = 'manual'): SourceRule {
+  return { text, source };
 }
 
 function match(ruleTexts: string[], url: string, source: SourceRef = 'manual') {
@@ -132,7 +129,7 @@ describe('边界', () => {
     expect(m.matchUrl('file:///C:/tmp/other.html')).toBeNull();
   });
 
-  it('同规则远程多源：首个引入者记名（assemble 去重，compile 幂等）', () => {
+  it('同规则远程多源：首个引入者记名（collect 去重，compile 幂等）', () => {
     const m = compile([src('*.a.com', 'remote:s1'), src('*.a.com', 'remote:s2')]);
     // compile 不覆盖已存在的 key（除 manual 优先），保留首个
     expect(m.matchUrl('https://x.a.com/')).toMatchObject({ source: 'remote:s1' });

@@ -1,16 +1,17 @@
 /**
  * 规则收集与去重（票 06/07）：手动规则 + 各启用远程源缓存 → 全局去重。
- * 由 matcher 组装（assemble.ts）与设置页概览（overview.ts）共用，避免两份漂移的实现。
+ * 由规则快照（snapshot.ts）与设置页概览（overview.ts）共用，避免两份漂移的实现。
+ *
+ * 票 04 深化：entries 只携带规范文本 + 来源（文本即去重键，写路径已规范化）；
+ * 「文本 → 解析结构」不再发生在此，只在编译处一次。
  */
 
-import type { ParsedRule } from './parser';
-import { parseLine } from './parser';
 import type { ManualRule, RemoteSource, SourceRef } from '../types';
 import { loadManualRules, loadSources, loadRemoteCache } from '../storage/store';
 
-/** 去重合并后的一条规则（保留解析结果 + 来源标记）。 */
+/** 去重合并后的一条规则（规范文本 + 来源标记）。 */
 export interface RuleEntry {
-  rule: ParsedRule;
+  text: string;
   source: SourceRef;
 }
 
@@ -35,10 +36,9 @@ export async function collectRuleEntries(): Promise<CollectedRules> {
   let manualCount = 0;
 
   for (const r of manualRules) {
-    const p = parseLine(r.text);
-    if (p && !('error' in p) && !seen.has(p.text)) {
-      seen.add(p.text);
-      entries.push({ rule: p, source: 'manual' });
+    if (!seen.has(r.text)) {
+      seen.add(r.text);
+      entries.push({ text: r.text, source: 'manual' });
       manualCount++;
     }
   }
@@ -50,10 +50,9 @@ export async function collectRuleEntries(): Promise<CollectedRules> {
       const cache = await loadRemoteCache(s.id);
       if (cache) {
         for (const t of cache.rules) {
-          const p = parseLine(t);
-          if (p && !('error' in p) && !seen.has(p.text)) {
-            seen.add(p.text);
-            entries.push({ rule: p, source: `remote:${s.id}` });
+          if (!seen.has(t)) {
+            seen.add(t);
+            entries.push({ text: t, source: `remote:${s.id}` });
             count++;
           }
         }

@@ -1,19 +1,17 @@
 /**
  * SiteFade 后台（票 01/08/07）：
  *  - history.onVisited（写后信号）→ 匹配 → deleteUrl(真实 URL)，幂等、失败静默；
- *  - storage 变更（sync 三 blob / local 远程缓存）→ 防抖重建匹配器；
+ *  - storage 变更（sync 三 blob / local 远程缓存）→ 防抖重建规则快照；
  *  - alarms 驱动远程源自动刷新；
  *  - popup 消息：状态查询 / 设为主机规则 / 移除手动规则 / 重置设置。
  *
- * 匹配器状态挂在模块作用域（defineBackground 闭包外），供 handleMessage 使用。
+ * 快照状态挂在 defineBackground 闭包外（票 03：匹配器与统计同源，单次重建）。
  */
 
 import { browser } from 'wxt/browser';
 import { MANUAL_LIMIT, REFRESH_PREFIX } from '@/lib/constants';
-import { buildMatcher } from '@/lib/matcher/assemble';
-import type { CompiledMatcher } from '@/lib/matcher/compile';
+import { buildSnapshot, type RuleSnapshot } from '@/lib/snapshot';
 import { parseLine, hostnameOfUrl } from '@/lib/rules/parser';
-import { collectRuleEntries } from '@/lib/rules/collect';
 import {
   loadManualRules,
   saveManualRules,
@@ -26,17 +24,17 @@ import type { PopupMessage, PopupResponse } from '@/lib/messaging';
 
 const REBUILD_DEBOUNCE_MS = 200;
 
-let matcher: CompiledMatcher | null = null;
+let snapshot: RuleSnapshot | null = null;
 let rebuildTimer: ReturnType<typeof setTimeout> | undefined;
 
-async function ensureMatcher() {
-  if (!matcher) matcher = await buildMatcher();
-  return matcher;
+async function ensureSnapshot() {
+  if (!snapshot) snapshot = await buildSnapshot();
+  return snapshot;
 }
 
-/** 立即重建并替换缓存（popup 自身写操作后同步，保证 status 读到最新）。 */
+/** 立即重建并替换快照（popup 自身写操作后同步，保证 status 读到最新）。 */
 async function rebuildNow() {
-  matcher = await buildMatcher();
+  snapshot = await buildSnapshot();
 }
 
 function scheduleRebuild() {
@@ -57,8 +55,8 @@ export default defineBackground(() => {
   browser.history.onVisited.addListener((item) => {
     const url = item?.url;
     if (!url) return;
-    void ensureMatcher().then((m) => {
-      const hit = m.matchUrl(url);
+    void ensureSnapshot().then((snap) => {
+      const hit = snap.matcher.matchUrl(url);
       if (!hit) return;
       void browser.history.deleteUrl({ url }).catch(() => {
         /* 静默：失败不打断、不记日志（票 08） */
@@ -83,9 +81,9 @@ export default defineBackground(() => {
     return true; // 异步响应
   });
 
-  // ---- 启动：不主动拉取远程源；惰性建匹配器 + 校准 alarms ----
+  // ---- 启动：不主动拉取远程源；惰性建快照 + 校准 alarms ----
   void syncAlarms();
-  void ensureMatcher();
+  void ensureSnapshot();
 });
 
 async function syncAlarms() {
@@ -121,9 +119,9 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
 
   switch (m.type) {
     case 'status': {
-      const matcher = await ensureMatcher();
+      const snap = await ensureSnapshot();
       const url = typeof (m as { url?: unknown }).url === 'string' ? (m as { url: string }).url : '';
-      const match = url ? matcher.matchUrl(url) : null;
+      const match = url ? snap.matcher.matchUrl(url) : null;
 
       let historyPermOk = true;
       try {
@@ -132,16 +130,13 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
         historyPermOk = true;
       }
 
-      const { sources, entries, perSource } = await collectRuleEntries();
-      const manualCount = perSource.get('manual') ?? 0;
-      const remoteCount = entries.length - manualCount;
       const matchLabel = match
         ? match.source === 'manual'
           ? '手动'
           : (() => {
               const id = match.source.slice('remote:'.length);
-              const s = sources.find((x) => x.id === id);
-              return s ? `远程「${s.name}」` : match.source;
+              const name = snap.sourceNames[id];
+              return name ? `远程「${name}」` : match.source;
             })()
         : undefined;
       return {
@@ -150,9 +145,9 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
           matched: !!match,
           match,
           matchLabel,
-          totalRules: entries.length,
-          manualCount,
-          remoteCount,
+          totalRules: snap.totalRules,
+          manualCount: snap.manualCount,
+          remoteCount: snap.remoteCount,
           historyPermOk,
         },
       };
