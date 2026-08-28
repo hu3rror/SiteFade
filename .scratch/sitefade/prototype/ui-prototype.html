@@ -1,0 +1,200 @@
+<!doctype html>
+<!--
+  SiteFade UI 原型（throwaway）
+  两张表面，各一个已定方案：popup（当前站点状态+开关）、设置页（单列流，规则区分页）。
+  ?surface=popup|settings 切换。A/B 设置变体已按用户意见移除（评审结论：单列流胜出，记录于票 09）。
+  PIN 锁：4-6 位数字、默认关、SHA-256 哈希存本地、错 5 次锁 30s、会话内解锁、popup 重置。
+  数据为假数据；交互仅演示观感，无持久化。正式实现是 WXT + Svelte 5。
+  使用：直接双击在浏览器打开即可。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteFade UI 原型（throwaway）</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --text:#1a1d21; --muted:#6b7280; --line:#e5e7eb;
+    --accent:#0f766e; --accent-soft:#ccfbf1; --danger:#b91c1c; --warn:#b45309; --warn-soft:#fef3c7;
+    --ok:#166534; --ok-soft:#dcfce7; --badge:#eef2f7;
+    --radius:12px; --shadow:0 1px 3px rgba(16,24,40,.08),0 8px 24px rgba(16,24,40,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:14px/1.5 -apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);padding:40px 16px 60px}
+  .head{max-width:960px;margin:0 auto 8px;display:flex;align-items:baseline;gap:12px}
+  .head h1{font-size:18px}
+  .head .tag{font-size:12px;color:var(--muted)}
+  .surf{max-width:960px;margin:0 auto 20px;display:flex;gap:8px}
+  .surf button{border:1px solid var(--line);background:var(--panel);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px;color:var(--text)}
+  .surf button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:var(--badge);color:var(--muted)}
+  .badge.manual{background:#ede9fe;color:#5b21b6}
+  .badge.remote{background:var(--accent-soft);color:var(--accent)}
+  .badge.ok{background:var(--ok-soft);color:var(--ok)}
+  .badge.warn{background:var(--warn-soft);color:var(--warn)}
+  .badge.danger{background:#fee2e2;color:var(--danger)}
+  .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13px}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.danger{border-color:#fecaca;color:var(--danger)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .muted{color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .dot.ok{background:#16a34a}.dot.warn{background:#f59e0b}.dot.danger{background:#dc2626}
+
+  .popup{width:364px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .chrome{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#fafafa;border-bottom:1px solid var(--line)}
+  .chrome i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .chrome i:nth-child(1){background:#f87171}.chrome i:nth-child(2){background:#fbbf24}.chrome i:nth-child(3){background:#34d399}
+  .chrome .url{flex:1;margin-left:6px;font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .popup .body{min-height:430px;padding:14px}
+  .popup .foot{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--line);background:#fafafa}
+
+  .settings{max-width:960px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;min-height:520px}
+  .settings .shead{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
+  .settings .shead .logo{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--muted);font-weight:500;font-size:12px;background:#fafafa}
+  tr:last-child td{border-bottom:none}
+
+  .note{max-width:960px;margin:16px auto 0;font-size:12px;color:var(--muted)}
+  .demo-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
+</style>
+</head>
+<body>
+
+<div class="head"><h1>SiteFade 界面原型</h1><span class="tag">throwaway · 已定方案 · 正式实现为 WXT + Svelte 5</span></div>
+<div class="surf" id="surfbar">
+  <button data-s="popup" class="on">Popup 小窗</button>
+  <button data-s="settings">设置页</button>
+</div>
+<main id="app"></main>
+<div class="note" id="hint"></div>
+
+<script>
+/* ---------------- 假数据 ---------------- */
+const SITE = { host: 'www.bilibili.com', url: 'https://www.bilibili.com/video/BV1xx411c7mD' };
+const MANUAL_RULES = ['youtube.com', 'twitter.com', 'tieba.baidu.com', 'pornhub.com', 'reddit.com', 'archive.org', 'example.com:8080', 'file:///C:/tmp/private.html'];
+const REMOTE_RULES = ['*.bilibili.com', '*.douyin.com', '*.weibo.com', '*.xiaohongshu.com', '*.zhihu.com', '*.quora.com', '*.tiktok.com', '*.instagram.com', '*.9gag.com'];
+const SOURCES = [
+  { id:'s1', name:'私藏黑名单', url:'https://raw.githubusercontent.com/x/sitefade-list/main/list.txt', status:'ok',   last:'2 小时前', n:3421, on:true,  grant:true },
+  { id:'s2', name:'社交网站全集', url:'https://example.org/blocked.txt', status:'warn', last:'3 天前',    n:840,  on:true,  grant:false },
+  { id:'s3', name:'临时实验源',  url:'https://example.com/broken', status:'danger', last:'从未成功', n:0,     on:false, grant:false },
+];
+const RULE_ROWS = [
+  ...REMOTE_RULES.map(r=>({ rule:r, src:'remote', from:'私藏黑名单' })),
+  ...MANUAL_RULES.map(r=>({ rule:r, src:'manual', from:'手动' })),
+];
+const IMPORT_RESULT = { add:1234, dup:56, invalid:12, invalidDetail:[
+  'chrome://flags — 特殊 scheme 拒绝', 'bad_host..com — 主机名非法', 'http://a'.repeat(300)+' — 超长', 'foo bar.com — 含空白', 'data:text/html,hi — 特殊 scheme 拒绝' ] };
+const PAGE_SIZE = 8;   // 原型演示每页 8 条；正式版默认每页 50 条（可调）
+const TOTAL_RULES = 3421;
+
+/* ---------------- 渲染 ---------------- */
+const state = { inList:true, permWarn:false, pinDemo:false, page:1, sOn:{s1:true,s2:true,s3:false} };
+const els = id => document.getElementById(id);
+function frameChrome(){ return `<div class="chrome"><i></i><i></i><i></i><span class="url">${SITE.url}</span></div>`; }
+
+/* ---- popup：当前站点状态 + 单个开关 ---- */
+function popMain(){
+  const inList = state.inList;
+  return `
+  <div class="popup">${frameChrome()}<div class="body">
+    <label class="demo-toggle"><input type="checkbox" id="permWarn" ${state.permWarn?'checked':''}> 演示：历史记录权限被关闭</label>
+    ${state.permWarn?`<div style="background:var(--warn-soft);border:1px solid #fde68a;color:var(--warn);font-size:12px;padding:8px 10px;border-radius:8px;margin-top:8px">历史记录权限已关闭，自动移除已停止。<a href="#" style="color:inherit">前往开启</a></div>`:''}
+    <div style="text-align:center;padding:26px 12px 20px;border:1px solid var(--line);border-radius:14px;margin-top:12px">
+      <div style="font-size:15px;font-weight:600">${SITE.host}</div>
+      <div style="margin-top:8px;font-size:13px">
+        ${inList ? `<span style="color:var(--ok)">不记入历史</span>` : `<span class="muted">会记入历史</span>`}
+      </div>
+      ${inList
+        ? `<div style="font-size:12px;color:var(--muted);margin-top:6px">命中规则 <code>*.bilibili.com</code> · 来源：远程「私藏黑名单」</div>`
+        : `<div style="font-size:12px;color:var(--muted);margin-top:6px">未设为不记入历史 · 此站会正常留在浏览历史里</div>`}
+      <div style="margin-top:16px">
+        <button class="btn ${inList?'':'primary'}" style="min-width:176px" onclick="state.inList=!state.inList;render()">
+          ${inList ? '恢复记入历史' : '设为不记入历史'}
+        </button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px">
+      <span class="muted">规则共 ${TOTAL_RULES.toLocaleString()} 条</span>
+      <span class="muted">手动 8 · 远程 3,413</span>
+    </div>
+  </div><div class="foot"><span class="muted">SiteFade</span><button class="btn" onclick="goSettings()">打开设置</button></div></div>`;
+}
+
+/* ---- PIN 锁定屏 ---- */
+function pinScreen(){
+  return `<div style="display:grid;place-items:center;min-height:520px"><div style="text-align:center;padding:20px">
+    <div style="width:52px;height:52px;margin:0 auto 12px;border-radius:14px;background:var(--badge);color:var(--muted);display:grid;place-items:center;font-size:24px">🔒</div>
+    <div style="font-weight:600;margin-bottom:4px">设置页已锁定</div>
+    <div class="muted" style="font-size:12px;margin-bottom:14px">输入 PIN 查看规则清单与远程源</div>
+    <input id="pinInput" maxlength="6" inputmode="numeric" placeholder="••••" autocomplete="off" style="width:120px;text-align:center;letter-spacing:6px;font-size:18px;border:1px solid var(--line);border-radius:10px;padding:8px">
+    <div style="margin-top:10px"><button class="btn primary" onclick="alert('演示：输入任意 PIN 即解锁')">解锁</button></div>
+    <div class="muted" style="font-size:11px;margin-top:14px">忘记 PIN？从 popup 的「重置设置」入口清除</div>
+  </div></div>`;
+}
+
+/* ---- 设置页：单列流（选定样式），规则区分页 ---- */
+function sC(){
+  const head = `<div class="shead"><div class="logo">SF</div><strong>SiteFade</strong><span style="flex:1"></span><label class="demo-toggle"><input type="checkbox" id="pinDemo" ${state.pinDemo?'checked':''}> 演示：PIN 锁</label></div>`;
+  if(state.pinDemo) return `<div class="settings">${head}${pinScreen()}</div>`;
+  const totalPages = Math.ceil(RULE_ROWS.length / PAGE_SIZE);
+  const rows = RULE_ROWS.slice((state.page-1)*PAGE_SIZE, state.page*PAGE_SIZE)
+    .map(r=>`<tr><td style="width:70px"><span class="badge ${r.src}">${r.src==='manual'?'手动':'远程'}</span></td><td>${r.rule}</td><td style="width:80px">${r.src==='manual'?'<a href="#" style="font-size:12px;color:var(--danger)">删除</a>':'<span class="muted" style="font-size:11px">${r.from}</span>'}</td></tr>`).join('');
+  return `<div class="settings" style="min-height:auto">${head}
+  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="border:1px solid var(--line);border-radius:12px;padding:14px"><div class="muted" style="font-size:12px">总规则</div><div style="font-size:22px;font-weight:700">${TOTAL_RULES.toLocaleString()}</div></div>
+      <div style="border:1px solid var(--line);border-radius:12px;padding:14px"><div class="muted" style="font-size:12px">手动（同步）</div><div style="font-size:22px;font-weight:700">8 <span class="muted" style="font-size:12px">/1000</span></div></div>
+      <div style="border:1px solid var(--line);border-radius:12px;padding:14px"><div class="muted" style="font-size:12px">远程源</div><div style="font-size:22px;font-weight:700">3 <span class="muted" style="font-size:12px">台</span></div></div>
+    </div>
+    <div style="border:1px solid var(--line);border-radius:12px;padding:14px">
+      <div style="font-weight:600;margin-bottom:8px">导入清单</div>
+      <textarea rows="3" placeholder="粘贴：每行一条规则" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px"></textarea>
+      <div style="display:flex;gap:8px;margin:8px 0"><button class="btn primary">导入</button><button class="btn">本地文件</button></div>
+      <div style="display:flex;gap:8px"><input placeholder="远程 URL" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px"><button class="btn">拉取</button></div>
+      <div style="display:flex;gap:10px;margin-top:10px;font-size:12px"><span class="badge ok">新增 1,234</span><span class="badge">重复 56</span><span class="badge danger">无效 12 <a href="#" style="color:inherit">明细</a></span></div>
+    </div>
+    <div style="border:1px solid var(--line);border-radius:12px;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-weight:600">规则清单</div>
+        <span class="muted" style="font-size:11px">每页 ${PAGE_SIZE} 条 · 共 ${TOTAL_RULES.toLocaleString()} 条（正式版默认每页 50）</span>
+      </div>
+      <input placeholder="搜索规则…" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:8px">
+      <table><tr><th>规则</th><th>来源</th><th style="width:80px"></th></tr>${rows}</table>
+      <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-top:10px;font-size:12px">
+        <button class="btn" style="padding:3px 10px" onclick="state.page=Math.max(1,state.page-1);render()" ${state.page<=1?'disabled':''}>上一页</button>
+        <span>第 ${state.page} / ${totalPages} 页</span>
+        <button class="btn" style="padding:3px 10px" onclick="state.page=Math.min(${totalPages},state.page+1);render()" ${state.page>=totalPages?'disabled':''}>下一页</button>
+      </div>
+    </div>
+    <div style="border:1px solid var(--line);border-radius:12px;padding:14px">
+      <div style="font-weight:600;margin-bottom:8px">远程源</div>
+      ${SOURCES.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)"><span class="dot ${s.status}"></span><span style="flex:1"><strong>${s.name}</strong><span class="muted" style="font-size:11px;margin-left:6px">${s.n} 条 · ${s.last}</span></span><input type="checkbox" ${state.sOn[s.id]?'checked':''}><button class="btn" style="padding:2px 8px;font-size:11px">刷新</button></div>`).join('')}
+      <button class="btn" style="margin-top:10px">+ 添加远程源</button>
+    </div>
+    <div style="display:flex;gap:10px"><button class="btn">导出当前清单 .txt</button><span class="muted" style="font-size:12px;align-self:center">数据仅存本机 · 设置页可加 PIN 锁</span></div>
+  </div></div>`;
+}
+
+/* ---------------- 表面切换与渲染 ---------------- */
+let surface = new URLSearchParams(location.search).get('surface') || 'popup';
+function syncURL(){ history.replaceState(null,'','?surface='+surface); }
+function render(){
+  document.querySelectorAll('#surfbar button').forEach(b=>b.classList.toggle('on',b.dataset.s===surface));
+  els('app').innerHTML = surface==='popup' ? popMain() : sC();
+  els('hint').textContent = surface==='popup'
+    ? '说明：popup = 当前站点状态 + 一个开关。状态（不记入/会记入历史）决定开关的样子，开关（设为不记入 / 恢复记入）改变状态。措辞不用"保护"、不展示"最近命中"（隐私工具不自曝访问）。'
+    : '说明：设置页已选定「单列流」——一页到底，规则清单按固定每页条数翻页（上一页/下一页；正式版默认每页 50 条），不做无限滚动。A/B 变体已移除。勾选"演示：PIN 锁"看加锁效果。';
+  if(surface==='popup'){ const p=els('permWarn'); if(p) p.checked=state.permWarn; }
+  syncURL();
+}
+function goSettings(){ surface='settings'; render(); }
+document.querySelectorAll('#surfbar button').forEach(b=>b.onclick=()=>{ surface=b.dataset.s; render(); });
+addEventListener('change',e=>{ const id=e.target&&e.target.id; if(id==='permWarn'){ state.permWarn=e.target.checked; render(); } if(id==='pinDemo'){ state.pinDemo=e.target.checked; render(); } });
+render();
+</script>
+</body>
+</html>
