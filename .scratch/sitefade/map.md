@@ -35,6 +35,7 @@
 - [删除机制与匹配器选型（技术路线核心决策）](./issues/08-mechanism-matcher-decision.md)：主 hook=onVisited+deleteUrl 幂等、仅需 history 权限；不做任何清扫（含首次启用）；失败静默+popup 权限提示；匹配器=主机后缀 Trie+精确 URL 表（判定与删除分离、防抖重建）；内部页无特判
 - [UI 技术栈与打包形态锁定](./issues/10-framework-lock.md)：WXT + Svelte 5 + TypeScript；产物=按浏览器分目录 unpacked + zip、release 挂包 + 中文安装说明；不引 UI 组件库（原生 CSS + 变量）；Node ≥20 LTS
 - [UI 表面原型（popup + 设置页）](./issues/09-ui-prototype.md)：popup=状态+开关（“不记入历史”措辞、无最近命中）；设置页=单列流、规则分页（默认每页 50）；PIN 锁：4–6 位、默认关、SHA-256 仅本地、错 5 次锁 30s、popup 重置
+  - **实现修订（2025-08 用户实测后）**：规则分页默认改为每页 10；区块改序（添加规则→规则清单→设置锁→导出，远程源并入“添加规则”区块、规则清单不再有手动添加输入）；“导入清单”更名“添加规则”；PIN 固定 4 位（去掉位数选择），改用圆点+数字键盘的 PinPad（隐藏明文、填满自动提交）；重置设置入口移至 PIN 锁定屏与设置页底部（popup 不再提供）
 
 ## Not yet specified
 
