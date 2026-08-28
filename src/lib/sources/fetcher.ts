@@ -1,6 +1,8 @@
 /**
  * 远程源拉取（票 07）：fetch + 响应上限 + 逐行同本地校验。
  * 纯数据解析，从不执行。纯 TS，可单测（依赖注入 fetch）。
+ *
+ * 票 02 深化：权限 pattern 推导已移入管理模块（授权 seam），拉取只管拉取。
  */
 
 import { MAX_RESPONSE_BYTES, FETCH_TIMEOUT_MS } from '../constants';
@@ -53,16 +55,5 @@ export async function fetchSourceList(url: string, fetchFn: FetchFn = fetch): Pr
     };
   } catch (e) {
     return { ok: false, kind: 'network', detail: e instanceof Error ? e.message : '读取响应失败' };
-  }
-}
-
-/** 从源 URL 推导可选 host 权限模式（按源授权，不用 <all_urls>）。 */
-export function originPermissionPattern(url: string): string | null {
-  try {
-    const u = new URL(url);
-    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
-    return `${u.protocol}//${u.host}/*`;
-  } catch {
-    return null;
   }
 }

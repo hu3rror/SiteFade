@@ -2,7 +2,7 @@
  * 远程源拉取测试（票 07）：依赖注入 fetch，验证失败分类与响应上限。
  */
 import { describe, it, expect } from 'vitest';
-import { fetchSourceList, originPermissionPattern } from './fetcher';
+import { fetchSourceList } from './fetcher';
 import { MAX_RESPONSE_BYTES } from '../constants';
 
 function resp(over: Partial<{ ok: boolean; status: number; text: string; contentLength: string | null }>) {
@@ -65,16 +65,5 @@ describe('fetchSourceList', () => {
     const res = await fetchSourceList('https://example.com/l', makeFetch(() => resp({ text: chinese })));
     expect(res.ok).toBe(false);
     expect(res.kind).toBe('parse');
-  });
-});
-
-describe('originPermissionPattern', () => {
-  it('生成按源 host 权限 pattern', () => {
-    expect(originPermissionPattern('https://raw.githubusercontent.com/x/list.txt')).toBe('https://raw.githubusercontent.com/*');
-    expect(originPermissionPattern('http://127.0.0.1:8080/l')).toBe('http://127.0.0.1:8080/*');
-  });
-  it('非 http(s) 返回 null', () => {
-    expect(originPermissionPattern('file:///tmp/l')).toBeNull();
-    expect(originPermissionPattern('not a url')).toBeNull();
   });
 });

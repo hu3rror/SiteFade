@@ -1,18 +1,20 @@
 /**
  * 远程源管理（票 04/07）：添加即拉、首拉失败也允许建源、按源运行时授权。
- * 运行于扩展上下文（设置页），依赖 storage 层与 fetcher。
+ * 运行于扩展上下文（设置页），依赖 storage 层与统一写入管线（applySourceFetch）。
  *
  * 授权注意（查证：permissions.request 必须在用户手势内同步调用）：
  *  - 本模块不自动申请授权（fetch 之后手势已失效）；
  *  - 由 UI 的「授权并重试」按钮在点击手势中先同步调用 grantOrigin，再刷新。
+ *
+ * 票 02 深化：权限 pattern 推导归本模块（授权 seam），拉取模块只做拉取。
  */
 
 import { browser } from 'wxt/browser';
-import { loadSources, saveSources, saveRemoteCache, deleteRemoteCache } from '../storage/store';
+import { loadSources, saveSources, deleteRemoteCache } from '../storage/store';
 import { genId } from '../id';
 import type { RemoteSource } from '../types';
-import { fetchSourceList, originPermissionPattern, type FetchOutcome } from './fetcher';
-import { applyFetchOutcome } from './sources';
+import { applySourceFetch } from './refresh';
+import type { FetchOutcome, FetchFn } from './fetcher';
 
 export interface AddSourceResult {
   ok: boolean;
@@ -27,6 +29,17 @@ export function defaultSourceName(url: string): string {
     return new URL(url).hostname;
   } catch {
     return '远程源';
+  }
+}
+
+/** 从源 URL 推导可选 host 权限模式（按源授权，不用 <all_urls>）。 */
+export function originPermissionPattern(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    return `${u.protocol}//${u.host}/*`;
+  } catch {
+    return null;
   }
 }
 
@@ -46,8 +59,12 @@ export async function grantOrigin(url: string): Promise<boolean> {
   }
 }
 
-/** 添加远程源：校验 URL、查重、立即拉取；失败也建源（票 07：首拉失败允许建源）。 */
-export async function addSource(url: string, name?: string): Promise<AddSourceResult> {
+/** 添加远程源：校验 URL、查重、走统一管线立即拉取；失败也建源（票 07：首拉失败允许建源）。 */
+export async function addSource(
+  url: string,
+  name?: string,
+  fetchFn?: FetchFn,
+): Promise<AddSourceResult> {
   let u: URL;
   try {
     u = new URL(url);
@@ -62,7 +79,6 @@ export async function addSource(url: string, name?: string): Promise<AddSourceRe
     return { ok: false, source: null, outcome: null, error: '该 URL 已在源列表中' };
   }
 
-  const outcome = await fetchSourceList(url);
   const src: RemoteSource = {
     id: genId(),
     name: (name ?? '').trim() || defaultSourceName(url),
@@ -74,10 +90,7 @@ export async function addSource(url: string, name?: string): Promise<AddSourceRe
     lastSuccessAt: null,
     lastError: null,
   };
-  const next = applyFetchOutcome(src, outcome, false);
-  if (outcome.ok && outcome.rules) {
-    await saveRemoteCache(next.id, { fetchedAt: Date.now(), rules: outcome.rules });
-  }
+  const { source: next, outcome } = await applySourceFetch(src, { isAuto: false }, fetchFn);
   await saveSources([...existing, next]);
   return { ok: true, source: next, outcome };
 }
