@@ -1,0 +1,415 @@
+/* 设置页布局（单列流，票 09）。继承 base.css 变量。 */
+
+.options {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ohead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 2px 10px;
+}
+.ohead .logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+.ohead h1 {
+  font-size: 18px;
+}
+.ohead .sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* ---- 统计卡片 ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.stat {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 14px 16px;
+}
+.stat .label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.stat .value {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.stat .value .sub {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* ---- 区块间距与标题 ---- */
+.sec-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- 导入 ---- */
+.import-actions {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+.url-row {
+  display: flex;
+  gap: 8px;
+}
+.url-row input {
+  flex: 1;
+}
+.import-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.invalid-detail {
+  margin-top: 8px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  font-size: 12px;
+}
+.invalid-detail .row {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0;
+}
+.invalid-detail .reason {
+  color: var(--danger);
+  flex: none;
+}
+.invalid-detail .line {
+  color: var(--muted);
+  word-break: break-all;
+}
+
+/* 行内链接式按钮（badge 内的“明细”） */
+.btn-link {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0 0 0 2px;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---- 规则表 ---- */
+.rules-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.rules-toolbar .search {
+  flex: 1;
+  min-width: 0;
+}
+.rules-toolbar .pagesize {
+  width: 92px;
+}
+
+/* 添加规则区块内的“远程源”子标题 */
+.sec-title.sub {
+  font-size: 14px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+td .rule-text {
+  word-break: break-all;
+}
+.row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.pager .info {
+  color: var(--muted);
+}
+
+/* ---- 远程源 ---- */
+.source-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.source-row:last-child {
+  border-bottom: none;
+}
+.source-main {
+  flex: 1;
+  min-width: 0;
+}
+.source-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.source-meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  word-break: break-all;
+}
+.source-err {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 2px;
+}
+.source-ops {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+.source-ops select {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  font-size: 12px;
+  background: var(--panel);
+  color: var(--text);
+}
+.add-source {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+.add-source input[type='text'] {
+  width: 40%;
+}
+.add-source input[type='url'] {
+  flex: 1;
+}
+
+/* ---- PIN ---- */
+.pin-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ---- PIN 输入面板（PinPad） ---- */
+.pinpad {
+  position: relative;
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 16px 16px;
+}
+.pinpad-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.pinpad-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.pinpad-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 4px;
+}
+.pinpad-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.pinpad-dot.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+/* 隐藏密码框：特异性需盖过 base.css 的 input[type=password] { width:100% }，
+   否则 100% 宽 + absolute + left:auto 会把页面撑出横向滚动条（诊断定位）。 */
+input[type='password'].pinpad-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.pinpad-err {
+  font-size: 12px;
+  color: var(--danger);
+  min-height: 18px;
+  margin: 4px 0 8px;
+}
+.pinpad-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.pinpad-key {
+  height: 52px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.12s, border-color 0.12s;
+}
+.pinpad-key:hover {
+  background: var(--badge-bg);
+}
+.pinpad-key:active {
+  background: var(--accent-soft);
+}
+.pinpad-key:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pinpad-key.ghost {
+  font-size: 13px;
+  color: var(--muted);
+  border-color: transparent;
+  background: transparent;
+}
+.pinpad-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* ---- PIN 位数选择 ---- */
+.pin-len {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pin-len-options {
+  display: flex;
+  gap: 10px;
+}
+.pin-len-options .btn {
+  min-width: 72px;
+  padding: 8px 12px;
+}
+
+/* ---- 底部重置条 ---- */.reset-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 2px 0;
+  flex-wrap: wrap;
+}
+
+/* ---- 锁定屏 ---- */
+.lock-screen {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+.lock-box {
+  text-align: center;
+  padding: 24px;
+  max-width: 320px;
+}
+.lock-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: var(--badge-bg);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+.lock-box h2 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.lock-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.lock-err {
+  font-size: 12px;
+  color: var(--danger);
+  margin-top: 8px;
+  min-height: 18px;
+}
+
+/* ---- toast ---- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: #1a1d21;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  z-index: 20;
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 640px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .source-ops {
+    flex-wrap: wrap;
+  }
+}
