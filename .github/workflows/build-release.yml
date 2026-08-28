@@ -1,0 +1,96 @@
+# 自动打包 + 发布：tag v* 时构建 Chromium/Firefox 产物并创建 draft release。
+#
+# 参考的官方文档：
+# - Workflow 语法: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+# - 发布管理: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
+#   （不可变 release 场景官方建议先建 draft 挂完资产再发布，故 draft: true）
+# - 自动生成 release notes: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+# - pnpm v11+ 建议使用官方接替 action pnpm/setup（pnpm/action-setup README 的迁移说明）
+name: build & release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # pnpm/setup 是 pnpm/action-setup 的官方接替者（pnpm v11+）。
+      # 一次安装 pnpm 与 Node runtime，替代 actions/setup-node。
+      - name: Install pnpm and Node
+        uses: pnpm/setup@v2
+        with:
+          version: 11
+          runtime: node@22
+          install: false # 下一步用 --frozen-lockfile 显式安装，保证锁文件一致
+          cache: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # zip 产物名取自 package.json 的 version（如 sitefade-0.1.0-chrome.zip），
+      # 因此 tag 必须与 version 一致，否则安装说明里的 <版本> 会对不上。
+      - name: Check tag matches package.json version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag_ver="${GITHUB_REF_NAME#v}"
+          pkg_ver="$(node -p "require('./package.json').version")"
+          if [ "$tag_ver" != "$pkg_ver" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match package.json version ${pkg_ver}; bump package.json first" >&2
+            exit 1
+          fi
+
+      - name: Type check
+        run: pnpm check
+
+      - name: Unit tests
+        run: pnpm test
+
+      # wxt zip 内部会先 build 再打包，无需单独跑 build。
+      - name: Build and zip (Chromium)
+        run: pnpm zip
+
+      - name: Build and zip (Firefox)
+        run: pnpm zip:firefox
+
+      - name: List zips
+        run: ls -la dist/*.zip
+
+      - name: Upload zips
+        uses: actions/upload-artifact@v7
+        with:
+          name: sitefade-zips
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    name: Create draft release
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write # 仅此 job 需要创建 release 的权限
+    steps:
+      - name: Download zips
+        uses: actions/download-artifact@v8
+        with:
+          name: sitefade-zips
+          path: dist
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          draft: true
