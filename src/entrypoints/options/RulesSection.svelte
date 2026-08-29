@@ -55,9 +55,9 @@
 
   async function saveEdit(oldText: string, newText: string) {
     editing = null;
-    const t2 = newText.trim();
-    if (!t2 || t2 === oldText) return;
-    const p = parseLine(t2);
+    const candidate = newText.trim();
+    if (!candidate || candidate === oldText) return;
+    const p = parseLine(candidate);
     if (!p || 'error' in p) {
       onToast(t('rules_toastInvalid'));
       return;

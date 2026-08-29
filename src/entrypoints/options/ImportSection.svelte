@@ -5,6 +5,7 @@
   import type { ManualImportResult } from '../../lib/rules/importRules';
   import { addSource, updateSource, removeSource, defaultSourceName, grantOrigin } from '../../lib/sources/manage';
   import { refreshSource } from '../../lib/sources/refresh';
+  import type { FetchOutcome } from '../../lib/sources/fetcher';
   import { FAILURE_LABEL } from '../../lib/sources/sources';
   import { t } from '../../lib/i18n.svelte';
   import type { RemoteSource } from '../../lib/types';
@@ -87,22 +88,27 @@
     return detail ? ` — ${t(detail)}` : '';
   }
 
+  /** 刷新结果 → toast：成功 / 失败分类 + 明细（成功或失败均可能无 outcome）。 */
+  function toastRefreshOutcome(outcome: FetchOutcome | null) {
+    if (outcome?.ok) {
+      onToast(t('import_toastRefreshOk'));
+    } else if (outcome) {
+      const label = FAILURE_LABEL[outcome.kind as keyof typeof FAILURE_LABEL];
+      onToast(
+        t('import_toastRefreshFail', {
+          label: t(label),
+          detail: t(outcome.detail ?? ''),
+        }),
+      );
+    }
+  }
+
   async function refresh(id: string) {
     if (refreshingId) return;
     refreshingId = id;
     try {
       const res = await refreshSource(id, { isAuto: false });
-      if (res.outcome?.ok) {
-        onToast(t('import_toastRefreshOk'));
-      } else if (res.outcome) {
-        const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
-        onToast(
-          t('import_toastRefreshFail', {
-            label: t(label),
-            detail: t(res.outcome.detail ?? ''),
-          }),
-        );
-      }
+      toastRefreshOutcome(res.outcome);
       onChanged();
     } finally {
       refreshingId = null;
@@ -121,16 +127,7 @@
     refreshingId = s.id;
     try {
       const res = await refreshSource(s.id, { isAuto: false });
-      if (res.outcome?.ok) onToast(t('import_toastRefreshOk'));
-      else if (res.outcome) {
-        const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
-        onToast(
-          t('import_toastRefreshFail', {
-            label: t(label),
-            detail: t(res.outcome.detail ?? ''),
-          }),
-        );
-      }
+      toastRefreshOutcome(res.outcome);
       onChanged();
     } finally {
       refreshingId = null;
