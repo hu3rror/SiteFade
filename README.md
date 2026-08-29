@@ -90,4 +90,4 @@ git push --follow-tags
 
 ## Privacy
 
-Everything runs on your machine: no telemetry, no reporting, and the only outbound traffic is the remote-source fetching you configured. Rule lists and source definitions sync between your devices; remote content and the PIN hash stay in local storage, and the PIN never syncs.
+Everything runs on your machine: no telemetry, no reporting, and the only outbound traffic is the remote-source fetching you configured. Manual rules, source definitions, and your appearance preferences (theme and UI language) sync between your devices; remote content and the PIN hash stay in local storage, and the PIN never syncs.
