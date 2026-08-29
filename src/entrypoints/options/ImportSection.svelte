@@ -8,16 +8,15 @@
   import type { FetchOutcome } from '../../lib/sources/fetcher';
   import { FAILURE_LABEL } from '../../lib/sources/sources';
   import { t } from '../../lib/i18n.svelte';
+  import { showToast } from '../../lib/toast.svelte';
   import type { RemoteSource } from '../../lib/types';
 
   let {
     sources,
     onChanged,
-    onToast,
   }: {
     sources: Array<RemoteSource & { ruleCount: number }>;
     onChanged: () => void;
-    onToast: (msg: string) => void;
   } = $props();
 
   // ---- 手动添加 ----
@@ -33,9 +32,9 @@
       const res = await importManualRules(text);
       summary = res;
       if (res.limitHit) {
-        onToast(t('import_toastLimit'));
+        showToast(t('import_toastLimit'));
       } else if (res.added > 0) {
-        onToast(t('import_toastAdded', { count: res.added }));
+        showToast(t('import_toastAdded', { count: res.added }));
       }
       text = '';
       onChanged();
@@ -91,10 +90,10 @@
   /** 刷新结果 → toast：成功 / 失败分类 + 明细（成功或失败均可能无 outcome）。 */
   function toastRefreshOutcome(outcome: FetchOutcome | null) {
     if (outcome?.ok) {
-      onToast(t('import_toastRefreshOk'));
+      showToast(t('import_toastRefreshOk'));
     } else if (outcome) {
       const label = FAILURE_LABEL[outcome.kind as keyof typeof FAILURE_LABEL];
-      onToast(
+      showToast(
         t('import_toastRefreshFail', {
           label: t(label),
           detail: t(outcome.detail ?? ''),
@@ -120,10 +119,10 @@
     if (refreshingId) return;
     const granted = await grantOrigin(s.url); // 必须是点击处理器里第一个异步调用
     if (!granted) {
-      onToast(t('import_toastGrantDenied'));
+      showToast(t('import_toastGrantDenied'));
       return;
     }
-    onToast(t('import_toastGranted'));
+    showToast(t('import_toastGranted'));
     refreshingId = s.id;
     try {
       const res = await refreshSource(s.id, { isAuto: false });
@@ -157,9 +156,9 @@
     try {
       const res = await addSource(newUrl.trim(), newName.trim() || defaultSourceName(newUrl.trim()));
       if (!res.ok) {
-        onToast(t(res.error ?? 'import_toastAddFail'));
+        showToast(t(res.error ?? 'import_toastAddFail'));
       } else {
-        onToast(res.outcome?.ok ? t('import_toastAddOk') : t('import_toastAddFirstFail', { detail: t(res.outcome?.detail ?? '') }));
+        showToast(res.outcome?.ok ? t('import_toastAddOk') : t('import_toastAddFirstFail', { detail: t(res.outcome?.detail ?? '') }));
         newName = '';
         newUrl = '';
         showAdd = false;

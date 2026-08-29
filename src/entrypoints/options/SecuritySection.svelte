@@ -6,13 +6,13 @@
   import { loadPinData, savePinData } from '../../lib/storage/store';
   import { MAX_PIN_ATTEMPTS, PIN_LOCK_MS } from '../../lib/constants';
   import { t } from '../../lib/i18n.svelte';
+  import { showToast } from '../../lib/toast.svelte';
   import PinPad from './PinPad.svelte';
 
   let {
     pinEnabled,
     onChanged,
-    onToast,
-  }: { pinEnabled: boolean; onChanged: () => void; onToast: (msg: string) => void } = $props();
+  }: { pinEnabled: boolean; onChanged: () => void } = $props();
 
   type Mode = 'idle' | 'set' | 'confirm' | 'verify' | 'change' | 'confirm-change';
   let mode = $state<Mode>('idle');
@@ -39,9 +39,9 @@
     error = '';
   }
 
-  async function persist(hash: string | null, toast: string) {
+  async function persist(hash: string | null, msg: string) {
     await savePinData({ hash });
-    onToast(toast);
+    showToast(msg);
     reset();
     onChanged();
   }

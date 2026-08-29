@@ -6,6 +6,7 @@
   import { applyTheme } from '../../lib/theme';
   import { t } from '../../lib/i18n.svelte';
   import { applyUiLanguage } from '../../lib/ui';
+  import { currentToast, showToast } from '../../lib/toast.svelte';
   import { resetSettings } from '../../lib/reset';
   import type { Overview, ThemePref, UiLang } from '../../lib/types';
   import PinGate from './PinGate.svelte';
@@ -16,18 +17,10 @@
 
   let overview = $state<Overview | null>(null);
   let unlocked = $state(false);
-  let toast = $state('');
-  let toastTimer: ReturnType<typeof setTimeout> | undefined;
   let resetting = $state(false);
 
   async function reload() {
     overview = await collectOverview();
-  }
-
-  function notify(msg: string) {
-    toast = msg;
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (toast = ''), 3000);
   }
 
   async function onPageSizeChange(n: number) {
@@ -58,7 +51,7 @@
       await resetSettings();
       unlocked = true; // PIN 已清，若有锁定状态也解除
       await reload();
-      notify(t('options_resetDone'));
+      showToast(t('options_resetDone'));
     } finally {
       resetting = false;
     }
@@ -106,7 +99,7 @@
     </div>
 
     <section class="card">
-      <ImportSection sources={overview.sources} onChanged={reload} onToast={notify} />
+      <ImportSection sources={overview.sources} onChanged={reload} />
     </section>
 
     <section class="card">
@@ -116,13 +109,12 @@
         sourceNames={sourceNames}
         manualCount={overview.manualRules.length}
         onChanged={reload}
-        onToast={notify}
         onPageSizeChange={onPageSizeChange}
       />
     </section>
 
     <section class="card">
-      <SecuritySection pinEnabled={overview.pinEnabled} onChanged={reload} onToast={notify} />
+      <SecuritySection pinEnabled={overview.pinEnabled} onChanged={reload} />
     </section>
 
     <section class="card">
@@ -170,6 +162,6 @@
   </div>
 {/if}
 
-{#if toast}
-  <div class="toast">{toast}</div>
+{#if currentToast()}
+  <div class="toast">{currentToast()}</div>
 {/if}

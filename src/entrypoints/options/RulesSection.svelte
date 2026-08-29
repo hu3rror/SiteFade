@@ -6,6 +6,7 @@
   import { genId } from '../../lib/id';
   import { MANUAL_LIMIT } from '../../lib/constants';
   import { t } from '../../lib/i18n.svelte';
+  import { showToast } from '../../lib/toast.svelte';
   import type { RuleRow } from '../../lib/types';
 
   let {
@@ -14,7 +15,6 @@
     sourceNames,
     manualCount,
     onChanged,
-    onToast,
     onPageSizeChange,
   }: {
     rows: RuleRow[];
@@ -22,7 +22,6 @@
     sourceNames: Record<string, string>;
     manualCount: number;
     onChanged: () => void;
-    onToast: (msg: string) => void;
     onPageSizeChange: (n: number) => void;
   } = $props();
 
@@ -59,17 +58,17 @@
     if (!candidate || candidate === oldText) return;
     const p = parseLine(candidate);
     if (!p || 'error' in p) {
-      onToast(t('rules_toastInvalid'));
+      showToast(t('rules_toastInvalid'));
       return;
     }
     const rules = await loadManualRules();
     const others = rules.filter((r) => r.text !== oldText);
     if (others.some((r) => r.text === p.text)) {
-      onToast(t('rules_toastExists'));
+      showToast(t('rules_toastExists'));
       return;
     }
     if (others.length >= MANUAL_LIMIT) {
-      onToast(t('rules_toastLimit', { limit: MANUAL_LIMIT }));
+      showToast(t('rules_toastLimit', { limit: MANUAL_LIMIT }));
       return;
     }
     await saveManualRules([...others, { id: genId(), text: p.text }]);
