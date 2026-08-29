@@ -78,12 +78,13 @@ pnpm zip             # Chromium build and zip
 pnpm zip:firefox     # Firefox build and zip
 ```
 
-Releases are automated through GitHub Actions. Cut a version:
+Releases are automated through GitHub Actions. Cut a version — **build locally first** so `dist/` and the zips are always the latest loadable build on this machine:
 
 ```bash
-pnpm version patch  # bump version + commit + create v* tag in one step
+pnpm zip && pnpm zip:firefox   # 1. local build + zip (produces dist/ and sitefade-<version>-*.zip)
+pnpm version patch             # 2. bump version + commit + create v* tag in one step
 # pnpm version minor | major  (or a literal version: pnpm version 0.2.0)
-git push --follow-tags
+git push --follow-tags         # 3. push (tag triggers the workflow to build + release)
 ```
 
 `pnpm version` writes `package.json`, commits it, and creates an annotated `v*` tag, so the two can never get out of sync. The workflow then type-checks, runs the tests, builds and zips both browsers, and creates a draft release with the three zips attached and notes generated from the commit history. Open the draft, take a look, publish. Tags that do not match the version in `package.json` are rejected on purpose, because the zip filenames embed that version.

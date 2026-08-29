@@ -12,7 +12,7 @@ Chromium + Firefox 浏览器扩展（WXT + Svelte 5 + TS，MV3）：访问清单
 - **i18n 文案**单一来源 `public/_locales/{zh_CN,en}/messages.json`；消息 key 一律下划线（Chrome 只许 `[a-zA-Z0-9_]`，点分 key 会校验失败）。
 - **错误输出**：纯 key 字段用 `ErrorKey` 联合类型（`src/lib/types.ts`）；混合字段（`FetchOutcome.detail`、`PopupResponse.error`，key 或原始串）保持 `string`；`t()` 对非 key 原始串恒等透出（见 CONTEXT「错误标识」）。
 - **测试**：vitest 为 node 环境（无 DOM）——副作用模块（写 DOM / timer）不写单测；纯逻辑（`i18n.ts`、`parser.ts` 等）写单测。
-- **发布**：tag 必须等于 `package.json` version（workflow 校验失败即报错）；打 tag 前先 bump version。
+- **发布**：tag 必须等于 `package.json` version（workflow 校验失败即报错）；打 tag 前先 bump version。**发版前先本地构建**（`pnpm zip && pnpm zip:firefox`，产出 `dist/` 与 zip），保证本地始终有最新可加载版本（加载 `dist/chrome-mv3/`）。
 
 ## 会话流程
 

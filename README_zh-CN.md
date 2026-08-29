@@ -78,12 +78,13 @@ pnpm zip             # Chromium 构建并打包
 pnpm zip:firefox     # Firefox 构建并打包
 ```
 
-发布由 GitHub Actions 自动完成。发版就两条命令：
+发布由 GitHub Actions 自动完成。发版就三步，**第一步先本地构建**，保证本地 `dist/` 与 zip 始终是最新可加载版本（个人自用直接加载 `dist/chrome-mv3/`）：
 
 ```bash
-pnpm version patch  # 改 version + commit + 打 v* tag，一步完成
+pnpm zip && pnpm zip:firefox   # 1. 本地构建并打包（产出 dist/ 与 sitefade-<版本>-*.zip）
+pnpm version patch             # 2. 改 version + commit + 打 v* tag，一步完成
 # pnpm version minor | major（或直接写版本号：pnpm version 0.2.0）
-git push --follow-tags
+git push --follow-tags         # 3. 推送（tag 触发 workflow 重新构建发布）
 ```
 
 `pnpm version` 改 `package.json`、提交、再打带注释的 `v*` tag，三者一次产出，从根上杜绝了「tag 和 version 对不上」。工作流随后会跑类型检查、单测，构建并打包两个浏览器，然后把三个 zip 挂到一个草稿 release 上，release notes 从提交历史自动生成。去 Releases 页核对后发布即可。tag 和 package.json 版本不一致仍会被拦下，这是保留的保险，因为 zip 文件名里嵌的就是这个版本。
