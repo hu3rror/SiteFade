@@ -2,189 +2,487 @@
   "extDescription": {
     "message": "访问清单内站点后立即从浏览历史中删除其访问记录。"
   },
-  "common.openSettings": { "message": "打开设置" },
-  "common.cancel": { "message": "取消" },
-  "common.save": { "message": "保存" },
-  "common.edit": { "message": "编辑" },
-  "common.delete": { "message": "删除" },
-  "common.manual": { "message": "手动" },
-  "common.remote": { "message": "远程" },
-  "common.refresh": { "message": "刷新" },
-  "common.enable": { "message": "启用" },
-  "common.sourceRemote": { "message": "远程「{name}」" },
-  "common.confirmRemoveSource": { "message": "删除远程源「{name}」？其本地缓存的规则也会一并移除。" },
-
-  "popup.permissionBanner": {
+  "common_openSettings": {
+    "message": "打开设置"
+  },
+  "common_cancel": {
+    "message": "取消"
+  },
+  "common_save": {
+    "message": "保存"
+  },
+  "common_edit": {
+    "message": "编辑"
+  },
+  "common_delete": {
+    "message": "删除"
+  },
+  "common_manual": {
+    "message": "手动"
+  },
+  "common_remote": {
+    "message": "远程"
+  },
+  "common_refresh": {
+    "message": "刷新"
+  },
+  "common_enable": {
+    "message": "启用"
+  },
+  "common_sourceRemote": {
+    "message": "远程「{name}」"
+  },
+  "common_confirmRemoveSource": {
+    "message": "删除远程源「{name}」？其本地缓存的规则也会一并移除。"
+  },
+  "popup_permissionBanner": {
     "message": "历史记录权限已关闭，自动移除已停止。请到浏览器扩展权限设置中开启「历史记录」权限。"
   },
-  "popup.noHost": { "message": "（无法读取当前站点）" },
-  "popup.matched": { "message": "不记入历史" },
-  "popup.unmatched": { "message": "会记入历史" },
-  "popup.matchedLine": { "message": "命中规则 {rule} · {source}" },
-  "popup.unmatchedLine": { "message": "未设为不记入历史 · 此站会正常留在浏览历史里" },
-  "popup.remoteRuleTitle": { "message": "该规则来自远程源，请在设置页管理" },
-  "popup.remoteNote": { "message": "命中远程源规则，请在设置页管理" },
-  "popup.restoreRecord": { "message": "恢复记入历史" },
-  "popup.skipRecord": { "message": "设为不记入历史" },
-  "popup.totalRules": { "message": "规则共 {count} 条" },
-  "popup.manualRemote": { "message": "手动 {m} · 远程 {r}" },
-  "popup.queryFailed": { "message": "查询失败" },
-  "popup.limitReached": { "message": "手动规则已达上限 {limit}" },
-  "popup.added": { "message": "已设为不记入历史" },
-  "popup.exists": { "message": "已在清单中" },
-  "popup.removed": { "message": "已恢复记入历史" },
-  "popup.failed": { "message": "操作失败" },
-
-  "options.title": { "message": "设置" },
-  "options.loading": { "message": "加载中…" },
-  "options.totalRules": { "message": "总规则" },
-  "options.manualSync": { "message": "手动（同步）" },
-  "options.remoteSources": { "message": "远程源" },
-  "options.remoteCountSuffix": { "message": " 台" },
-  "options.reset": { "message": "重置设置" },
-  "options.resetHint": { "message": "清除 PIN、本机缓存与全部远程源（手动规则保留）" },
-  "options.resetConfirm": {
+  "popup_noHost": {
+    "message": "（无法读取当前站点）"
+  },
+  "popup_matched": {
+    "message": "不记入历史"
+  },
+  "popup_unmatched": {
+    "message": "会记入历史"
+  },
+  "popup_matchedLine": {
+    "message": "命中规则 {rule} · {source}"
+  },
+  "popup_unmatchedLine": {
+    "message": "未设为不记入历史 · 此站会正常留在浏览历史里"
+  },
+  "popup_remoteRuleTitle": {
+    "message": "该规则来自远程源，请在设置页管理"
+  },
+  "popup_remoteNote": {
+    "message": "命中远程源规则，请在设置页管理"
+  },
+  "popup_restoreRecord": {
+    "message": "恢复记入历史"
+  },
+  "popup_skipRecord": {
+    "message": "设为不记入历史"
+  },
+  "popup_totalRules": {
+    "message": "规则共 {count} 条"
+  },
+  "popup_manualRemote": {
+    "message": "手动 {m} · 远程 {r}"
+  },
+  "popup_queryFailed": {
+    "message": "查询失败"
+  },
+  "popup_limitReached": {
+    "message": "手动规则已达上限 {limit}"
+  },
+  "popup_added": {
+    "message": "已设为不记入历史"
+  },
+  "popup_exists": {
+    "message": "已在清单中"
+  },
+  "popup_removed": {
+    "message": "已恢复记入历史"
+  },
+  "popup_failed": {
+    "message": "操作失败"
+  },
+  "options_title": {
+    "message": "设置"
+  },
+  "options_loading": {
+    "message": "加载中…"
+  },
+  "options_totalRules": {
+    "message": "总规则"
+  },
+  "options_manualSync": {
+    "message": "手动（同步）"
+  },
+  "options_remoteSources": {
+    "message": "远程源"
+  },
+  "options_remoteCountSuffix": {
+    "message": " 台"
+  },
+  "options_reset": {
+    "message": "重置设置"
+  },
+  "options_resetHint": {
+    "message": "清除 PIN、本机缓存与全部远程源（手动规则保留）"
+  },
+  "options_resetConfirm": {
     "message": "重置设置将清除 PIN、本机缓存与全部远程源（手动规则保留）。确定继续？"
   },
-  "options.resetDone": { "message": "已重置" },
-
-  "appearance.title": { "message": "外观" },
-  "appearance.theme": { "message": "主题" },
-  "appearance.themeSystem": { "message": "跟随系统" },
-  "appearance.themeLight": { "message": "浅色" },
-  "appearance.themeDark": { "message": "深色" },
-  "appearance.language": { "message": "界面语言" },
-  "appearance.langFollow": { "message": "跟随浏览器" },
-  "appearance.langZh": { "message": "中文" },
-  "appearance.langEn": { "message": "English" },
-  "appearance.syncHint": { "message": "主题与界面语言随账号同步" },
-
-  "import.title": { "message": "添加规则" },
-  "import.hint": { "message": "手动输入或从文件批量添加；或从远程 URL 拉取清单" },
-  "import.pastePlaceholder": {
+  "options_resetDone": {
+    "message": "已重置"
+  },
+  "appearance_title": {
+    "message": "外观"
+  },
+  "appearance_theme": {
+    "message": "主题"
+  },
+  "appearance_themeSystem": {
+    "message": "跟随系统"
+  },
+  "appearance_themeLight": {
+    "message": "浅色"
+  },
+  "appearance_themeDark": {
+    "message": "深色"
+  },
+  "appearance_language": {
+    "message": "界面语言"
+  },
+  "appearance_langFollow": {
+    "message": "跟随浏览器"
+  },
+  "appearance_langZh": {
+    "message": "中文"
+  },
+  "appearance_langEn": {
+    "message": "English"
+  },
+  "appearance_syncHint": {
+    "message": "主题与界面语言随账号同步"
+  },
+  "import_title": {
+    "message": "添加规则"
+  },
+  "import_hint": {
+    "message": "手动输入或从文件批量添加；或从远程 URL 拉取清单"
+  },
+  "import_pastePlaceholder": {
     "message": "粘贴：每行一条规则（支持注释 #、通配符 *. +. .、IP、端口、精确 URL）"
   },
-  "import.add": { "message": "添加" },
-  "import.localFile": { "message": "本地文件" },
-  "import.summaryLimit": { "message": "超出手动上限，未新增" },
-  "import.added": { "message": "新增 {count}" },
-  "import.duplicate": { "message": "重复 {count}" },
-  "import.invalid": { "message": "无效 {count}" },
-  "import.detail": { "message": "明细" },
-  "import.collapse": { "message": "收起" },
-  "import.manualTotal": { "message": "手动规则 {total}/1000" },
-  "import.remoteTitle": { "message": "远程源" },
-  "import.intervalAria": { "message": "自动刷新间隔" },
-  "import.remoteHint": { "message": "内容仅存本机，不随账号同步；手动刷新或按间隔自动刷新" },
-  "import.disabled": { "message": "已停用" },
-  "import.failedRepeatedly": { "message": "连续失败" },
-  "import.metaLine": { "message": "{count} 条 · 上次成功 {time}" },
-  "import.autoRefresh": { "message": " · 每 {hours}h 自动刷新" },
-  "import.grantRetry": { "message": "授权并重试" },
-  "import.refreshing": { "message": "刷新中…" },
-  "import.noSources": { "message": "尚未添加远程源" },
-  "import.namePlaceholder": { "message": "名称（默认取主机名）" },
-  "import.urlPlaceholder": { "message": "https://…（每行一条的纯文本清单）" },
-  "import.addAndFetch": { "message": "添加并拉取" },
-  "import.addSource": { "message": "+ 添加远程源" },
-  "import.toastLimit": { "message": "手动规则已达上限 1000，请清理或改用远程源" },
-  "import.toastAdded": { "message": "新增 {count} 条" },
-  "import.toastRefreshOk": { "message": "刷新成功" },
-  "import.toastRefreshFail": { "message": "刷新失败（{label}：{detail}）" },
-  "import.toastGrantDenied": { "message": "授权被拒绝，无法访问该来源" },
-  "import.toastGranted": { "message": "已授权，正在重试…" },
-  "import.toastAddFail": { "message": "添加失败" },
-  "import.toastAddOk": { "message": "已添加并拉取成功" },
-  "import.toastAddFirstFail": { "message": "已添加（首拉失败：{detail}）" },
-
-  "source.kind.network": { "message": "网络错误" },
-  "source.kind.http": { "message": "HTTP 错误" },
-  "source.kind.parse": { "message": "解析失败" },
-
-  "time.never": { "message": "从未成功" },
-  "time.justNow": { "message": "刚刚" },
-  "time.minutesAgo": { "message": "{n} 分钟前" },
-  "time.hoursAgo": { "message": "{n} 小时前" },
-  "time.daysAgo": { "message": "{n} 天前" },
-
-  "rules.title": { "message": "规则清单" },
-  "rules.perPageAria": { "message": "每页条数" },
-  "rules.meta": { "message": "共 {count} 条 · 手动 {manual}/{limit}" },
-  "rules.search": { "message": "搜索规则…" },
-  "rules.perPage": { "message": "{n} 条/页" },
-  "rules.colSource": { "message": "来源" },
-  "rules.colRule": { "message": "规则" },
-  "rules.noMatch": { "message": "没有匹配的规则" },
-  "rules.prev": { "message": "上一页" },
-  "rules.pageInfo": { "message": "第 {cur} / {total} 页" },
-  "rules.next": { "message": "下一页" },
-  "rules.toastInvalid": { "message": "规则无效，未修改" },
-  "rules.toastExists": { "message": "该规则已存在" },
-  "rules.toastLimit": { "message": "手动规则已达上限 {limit}" },
-
-  "security.title": { "message": "设置锁" },
-  "security.hint": {
+  "import_add": {
+    "message": "添加"
+  },
+  "import_localFile": {
+    "message": "本地文件"
+  },
+  "import_summaryLimit": {
+    "message": "超出手动上限，未新增"
+  },
+  "import_added": {
+    "message": "新增 {count}"
+  },
+  "import_duplicate": {
+    "message": "重复 {count}"
+  },
+  "import_invalid": {
+    "message": "无效 {count}"
+  },
+  "import_detail": {
+    "message": "明细"
+  },
+  "import_collapse": {
+    "message": "收起"
+  },
+  "import_manualTotal": {
+    "message": "手动规则 {total}/1000"
+  },
+  "import_remoteTitle": {
+    "message": "远程源"
+  },
+  "import_intervalAria": {
+    "message": "自动刷新间隔"
+  },
+  "import_remoteHint": {
+    "message": "内容仅存本机，不随账号同步；手动刷新或按间隔自动刷新"
+  },
+  "import_disabled": {
+    "message": "已停用"
+  },
+  "import_failedRepeatedly": {
+    "message": "连续失败"
+  },
+  "import_metaLine": {
+    "message": "{count} 条 · 上次成功 {time}"
+  },
+  "import_autoRefresh": {
+    "message": " · 每 {hours}h 自动刷新"
+  },
+  "import_grantRetry": {
+    "message": "授权并重试"
+  },
+  "import_refreshing": {
+    "message": "刷新中…"
+  },
+  "import_noSources": {
+    "message": "尚未添加远程源"
+  },
+  "import_namePlaceholder": {
+    "message": "名称（默认取主机名）"
+  },
+  "import_urlPlaceholder": {
+    "message": "https://…（每行一条的纯文本清单）"
+  },
+  "import_addAndFetch": {
+    "message": "添加并拉取"
+  },
+  "import_addSource": {
+    "message": "+ 添加远程源"
+  },
+  "import_toastLimit": {
+    "message": "手动规则已达上限 1000，请清理或改用远程源"
+  },
+  "import_toastAdded": {
+    "message": "新增 {count} 条"
+  },
+  "import_toastRefreshOk": {
+    "message": "刷新成功"
+  },
+  "import_toastRefreshFail": {
+    "message": "刷新失败（{label}：{detail}）"
+  },
+  "import_toastGrantDenied": {
+    "message": "授权被拒绝，无法访问该来源"
+  },
+  "import_toastGranted": {
+    "message": "已授权，正在重试…"
+  },
+  "import_toastAddFail": {
+    "message": "添加失败"
+  },
+  "import_toastAddOk": {
+    "message": "已添加并拉取成功"
+  },
+  "import_toastAddFirstFail": {
+    "message": "已添加（首拉失败：{detail}）"
+  },
+  "source_kind_network": {
+    "message": "网络错误"
+  },
+  "source_kind_http": {
+    "message": "HTTP 错误"
+  },
+  "source_kind_parse": {
+    "message": "解析失败"
+  },
+  "time_never": {
+    "message": "从未成功"
+  },
+  "time_justNow": {
+    "message": "刚刚"
+  },
+  "time_minutesAgo": {
+    "message": "{n} 分钟前"
+  },
+  "time_hoursAgo": {
+    "message": "{n} 小时前"
+  },
+  "time_daysAgo": {
+    "message": "{n} 天前"
+  },
+  "rules_title": {
+    "message": "规则清单"
+  },
+  "rules_perPageAria": {
+    "message": "每页条数"
+  },
+  "rules_meta": {
+    "message": "共 {count} 条 · 手动 {manual}/{limit}"
+  },
+  "rules_search": {
+    "message": "搜索规则…"
+  },
+  "rules_perPage": {
+    "message": "{n} 条/页"
+  },
+  "rules_colSource": {
+    "message": "来源"
+  },
+  "rules_colRule": {
+    "message": "规则"
+  },
+  "rules_noMatch": {
+    "message": "没有匹配的规则"
+  },
+  "rules_prev": {
+    "message": "上一页"
+  },
+  "rules_pageInfo": {
+    "message": "第 {cur} / {total} 页"
+  },
+  "rules_next": {
+    "message": "下一页"
+  },
+  "rules_toastInvalid": {
+    "message": "规则无效，未修改"
+  },
+  "rules_toastExists": {
+    "message": "该规则已存在"
+  },
+  "rules_toastLimit": {
+    "message": "手动规则已达上限 {limit}"
+  },
+  "security_title": {
+    "message": "设置锁"
+  },
+  "security_hint": {
     "message": "可选 PIN 保护（4 位数字）。仅存本机 SHA-256 哈希，不存明文、不联网、不同步。只锁设置页，工具栏 popup 不受影响。"
   },
-  "security.enabled": { "message": "PIN 锁已启用" },
-  "security.change": { "message": "修改" },
-  "security.disable": { "message": "关闭" },
-  "security.enable": { "message": "设置 PIN 锁" },
-  "security.notEnabled": { "message": "当前未启用" },
-  "security.pinFormat": { "message": "PIN 需为 4 位数字" },
-  "security.newPinFormat": { "message": "新 PIN 需为 4 位数字" },
-  "security.mismatch": { "message": "两次输入不一致，请重新设置" },
-  "security.tooManyTries": { "message": "输错次数过多，请 {seconds} 秒后再试" },
-  "security.wrongPin": { "message": "当前 PIN 不正确" },
-  "security.titleVerify": { "message": "验证当前 PIN" },
-  "security.titleSet": { "message": "设置新 PIN" },
-  "security.titleConfirm": { "message": "确认 PIN" },
-  "security.hintVerify": { "message": "修改或关闭前需要验证" },
-  "security.hintDigits": { "message": "4 位数字" },
-  "security.hintConfirm": { "message": "再次输入以确认" },
-  "security.toastEnabled": { "message": "已启用 PIN 锁" },
-  "security.toastDisabled": { "message": "已关闭 PIN 锁" },
-  "security.toastChanged": { "message": "PIN 已修改" },
-  "security.forgotHint": {
+  "security_enabled": {
+    "message": "PIN 锁已启用"
+  },
+  "security_change": {
+    "message": "修改"
+  },
+  "security_disable": {
+    "message": "关闭"
+  },
+  "security_enable": {
+    "message": "设置 PIN 锁"
+  },
+  "security_notEnabled": {
+    "message": "当前未启用"
+  },
+  "security_pinFormat": {
+    "message": "PIN 需为 4 位数字"
+  },
+  "security_newPinFormat": {
+    "message": "新 PIN 需为 4 位数字"
+  },
+  "security_mismatch": {
+    "message": "两次输入不一致，请重新设置"
+  },
+  "security_tooManyTries": {
+    "message": "输错次数过多，请 {seconds} 秒后再试"
+  },
+  "security_wrongPin": {
+    "message": "当前 PIN 不正确"
+  },
+  "security_titleVerify": {
+    "message": "验证当前 PIN"
+  },
+  "security_titleSet": {
+    "message": "设置新 PIN"
+  },
+  "security_titleConfirm": {
+    "message": "确认 PIN"
+  },
+  "security_hintVerify": {
+    "message": "修改或关闭前需要验证"
+  },
+  "security_hintDigits": {
+    "message": "4 位数字"
+  },
+  "security_hintConfirm": {
+    "message": "再次输入以确认"
+  },
+  "security_toastEnabled": {
+    "message": "已启用 PIN 锁"
+  },
+  "security_toastDisabled": {
+    "message": "已关闭 PIN 锁"
+  },
+  "security_toastChanged": {
+    "message": "PIN 已修改"
+  },
+  "security_forgotHint": {
     "message": "忘记 PIN？从设置页底部的「重置设置」清除（将同时清空本机缓存与远程源）。"
   },
-
-  "pingate.locked": { "message": "设置页已锁定" },
-  "pingate.enterPin": { "message": "输入 PIN" },
-  "pingate.wrongPin": { "message": "PIN 不正确，请重试" },
-  "pingate.forgotHint": { "message": "忘记 PIN？重置后需重新添加远程源" },
-
-  "pinpad.clear": { "message": "清除" },
-  "pinpad.backspace": { "message": "退格" },
-  "pinpad.fillHint": { "message": "填满 4 位自动完成" },
-  "pinpad.disabled": { "message": "暂时不可输入" },
-  "pinpad.inputAria": { "message": "PIN 输入" },
-
-  "export.title": { "message": "导出" },
-  "export.button": { "message": "导出当前清单 .txt" },
-  "export.hint": {
+  "pingate_locked": {
+    "message": "设置页已锁定"
+  },
+  "pingate_enterPin": {
+    "message": "输入 PIN"
+  },
+  "pingate_wrongPin": {
+    "message": "PIN 不正确，请重试"
+  },
+  "pingate_forgotHint": {
+    "message": "忘记 PIN？重置后需重新添加远程源"
+  },
+  "pinpad_clear": {
+    "message": "清除"
+  },
+  "pinpad_backspace": {
+    "message": "退格"
+  },
+  "pinpad_fillHint": {
+    "message": "填满 4 位自动完成"
+  },
+  "pinpad_disabled": {
+    "message": "暂时不可输入"
+  },
+  "pinpad_inputAria": {
+    "message": "PIN 输入"
+  },
+  "export_title": {
+    "message": "导出"
+  },
+  "export_button": {
+    "message": "导出当前清单 .txt"
+  },
+  "export_hint": {
     "message": "共 {count} 条（去重、手动优先）。数据仅存本机；设置页可加 PIN 锁。"
   },
-
-  "error.tooLong": { "message": "超过 2048 字符" },
-  "error.hasWhitespace": { "message": "包含空白字符" },
-  "error.invalidHost": { "message": "主机名非法" },
-  "error.invalidIpv6": { "message": "IPv6 字面量格式非法" },
-  "error.invalidPort": { "message": "端口范围非法" },
-  "error.invalidPortEntry": { "message": "带端口条目格式非法" },
-  "error.invalidUrl": { "message": "URL 无法解析" },
-  "error.badScheme": { "message": "特殊 scheme 拒绝" },
-  "error.missingHost": { "message": "缺少主机名" },
-  "error.httpOnly": { "message": "仅支持 http/https 远程源" },
-  "error.urlExists": { "message": "该 URL 已在源列表中" },
-  "error.defaultSourceName": { "message": "远程源" },
-  "error.timeout": { "message": "请求超时" },
-  "error.network": { "message": "网络错误" },
-  "error.responseTooLarge": { "message": "响应超过 2MB 上限" },
-  "error.readFailed": { "message": "读取响应失败" },
-  "error.badMessage": { "message": "消息格式错误" },
-  "error.noHostname": { "message": "无法解析当前站点主机名" },
-  "error.saveFailed": { "message": "保存失败（同步配额不足？）" },
-  "error.unknownMessage": { "message": "未知消息" },
-  "error.noBackground": { "message": "后台无响应" }
+  "error_tooLong": {
+    "message": "超过 2048 字符"
+  },
+  "error_hasWhitespace": {
+    "message": "包含空白字符"
+  },
+  "error_invalidHost": {
+    "message": "主机名非法"
+  },
+  "error_invalidIpv6": {
+    "message": "IPv6 字面量格式非法"
+  },
+  "error_invalidPort": {
+    "message": "端口范围非法"
+  },
+  "error_invalidPortEntry": {
+    "message": "带端口条目格式非法"
+  },
+  "error_invalidUrl": {
+    "message": "URL 无法解析"
+  },
+  "error_badScheme": {
+    "message": "特殊 scheme 拒绝"
+  },
+  "error_missingHost": {
+    "message": "缺少主机名"
+  },
+  "error_httpOnly": {
+    "message": "仅支持 http/https 远程源"
+  },
+  "error_urlExists": {
+    "message": "该 URL 已在源列表中"
+  },
+  "error_defaultSourceName": {
+    "message": "远程源"
+  },
+  "error_timeout": {
+    "message": "请求超时"
+  },
+  "error_network": {
+    "message": "网络错误"
+  },
+  "error_responseTooLarge": {
+    "message": "响应超过 2MB 上限"
+  },
+  "error_readFailed": {
+    "message": "读取响应失败"
+  },
+  "error_badMessage": {
+    "message": "消息格式错误"
+  },
+  "error_noHostname": {
+    "message": "无法解析当前站点主机名"
+  },
+  "error_saveFailed": {
+    "message": "保存失败（同步配额不足？）"
+  },
+  "error_unknownMessage": {
+    "message": "未知消息"
+  },
+  "error_noBackground": {
+    "message": "后台无响应"
+  }
 }

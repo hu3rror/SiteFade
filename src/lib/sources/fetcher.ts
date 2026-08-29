@@ -29,7 +29,7 @@ export async function fetchSourceList(url: string, fetchFn: FetchFn = fetch): Pr
   try {
     resp = await fetchFn(url, { signal: controller.signal, cache: 'no-store' });
   } catch (e) {
-    const msg = controller.signal.aborted ? 'error.timeout' : e instanceof Error ? e.message : 'error.network';
+    const msg = controller.signal.aborted ? 'error_timeout' : e instanceof Error ? e.message : 'error_network';
     return { ok: false, kind: 'network', detail: msg };
   } finally {
     clearTimeout(timer);
@@ -39,12 +39,12 @@ export async function fetchSourceList(url: string, fetchFn: FetchFn = fetch): Pr
     if (!resp.ok) return { ok: false, kind: 'http', detail: `HTTP ${resp.status}` };
     const contentLength = resp.headers.get('content-length');
     if (contentLength && Number(contentLength) > MAX_RESPONSE_BYTES) {
-      return { ok: false, kind: 'parse', detail: 'error.responseTooLarge' };
+      return { ok: false, kind: 'parse', detail: 'error_responseTooLarge' };
     }
     const text = await resp.text();
     // 字节级校验（UTF-8）；text.length 是 UTF-16 码元数，中文会低估。
     if (new TextEncoder().encode(text).length > MAX_RESPONSE_BYTES) {
-      return { ok: false, kind: 'parse', detail: 'error.responseTooLarge' };
+      return { ok: false, kind: 'parse', detail: 'error_responseTooLarge' };
     }
     const parsed = parseRules(text);
     return {
@@ -54,6 +54,6 @@ export async function fetchSourceList(url: string, fetchFn: FetchFn = fetch): Pr
       summary: { added: parsed.added, duplicate: parsed.duplicate, invalid: parsed.invalid },
     };
   } catch (e) {
-    return { ok: false, kind: 'network', detail: e instanceof Error ? e.message : 'error.readFailed' };
+    return { ok: false, kind: 'network', detail: e instanceof Error ? e.message : 'error_readFailed' };
   }
 }

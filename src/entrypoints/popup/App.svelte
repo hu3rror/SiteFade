@@ -30,7 +30,7 @@
     const res = await sendPopupMessage({ type: 'status', url: currentUrl });
     if (!res.ok) {
       status = null;
-      toast = t('popup.queryFailed');
+      toast = t('popup_queryFailed');
       return;
     }
     status = res.status ?? null;
@@ -43,13 +43,13 @@
     try {
       if (!status.matched) {
         const res = await sendPopupMessage({ type: 'addHost', host: currentUrl });
-        if (res.action === 'limit') toast = t('popup.limitReached', { limit: res.limit ?? 1000 });
-        else if (res.action === 'added') toast = t('popup.added');
-        else if (res.action === 'exists') toast = t('popup.exists');
-        else toast = t(res.error ?? 'popup.failed');
+        if (res.action === 'limit') toast = t('popup_limitReached', { limit: res.limit ?? 1000 });
+        else if (res.action === 'added') toast = t('popup_added');
+        else if (res.action === 'exists') toast = t('popup_exists');
+        else toast = t(res.error ?? 'popup_failed');
       } else if (status.match?.source === 'manual') {
         const res = await sendPopupMessage({ type: 'removeManual', text: status.match.ruleText });
-        toast = res.action === 'removed' ? t('popup.removed') : t(res.error ?? 'popup.failed');
+        toast = res.action === 'removed' ? t('popup_removed') : t(res.error ?? 'popup_failed');
       }
       await refresh();
     } finally {
@@ -71,8 +71,8 @@
   const sourceLabel = $derived(
     status?.match
       ? status.match.source === 'manual'
-        ? t('common.manual')
-        : t('common.sourceRemote', { name: status.sourceName ?? status.match.source })
+        ? t('common_manual')
+        : t('common_sourceRemote', { name: status.sourceName ?? status.match.source })
       : '',
   );
 </script>
@@ -80,37 +80,37 @@
 <div class="popup">
   {#if status && !status.historyPermOk}
     <div class="banner">
-      {t('popup.permissionBanner')}
+      {t('popup_permissionBanner')}
     </div>
   {/if}
 
   <div class="body">
     <div class="site-card">
-      <div class="host">{currentHost || t('popup.noHost')}</div>
+      <div class="host">{currentHost || t('popup_noHost')}</div>
       <div class="state">
         {#if status?.matched}
-          <span class="state-ok">{t('popup.matched')}</span>
+          <span class="state-ok">{t('popup_matched')}</span>
         {:else}
-          <span class="state-muted">{t('popup.unmatched')}</span>
+          <span class="state-muted">{t('popup_unmatched')}</span>
         {/if}
       </div>
       {#if status?.matched}
         <div class="match-line muted">
-          {t('popup.matchedLine', { rule: status.match!.ruleText, source: sourceLabel })}
+          {t('popup_matchedLine', { rule: status.match!.ruleText, source: sourceLabel })}
         </div>
       {:else}
-        <div class="match-line muted">{t('popup.unmatchedLine')}</div>
+        <div class="match-line muted">{t('popup_unmatchedLine')}</div>
       {/if}
 
       <div class="actions">
         {#if status?.matched && matchedRemote}
-          <button class="btn" disabled title={t('popup.remoteRuleTitle')}>
-            {t('popup.restoreRecord')}
+          <button class="btn" disabled title={t('popup_remoteRuleTitle')}>
+            {t('popup_restoreRecord')}
           </button>
-          <div class="muted note-small">{t('popup.remoteNote')}</div>
+          <div class="muted note-small">{t('popup_remoteNote')}</div>
         {:else}
           <button class="btn {notMatched ? 'primary' : ''}" style="min-width:176px" onclick={toggle} disabled={busy || !status}>
-            {notMatched ? t('popup.skipRecord') : t('popup.restoreRecord')}
+            {notMatched ? t('popup_skipRecord') : t('popup_restoreRecord')}
           </button>
         {/if}
       </div>
@@ -121,15 +121,15 @@
     {/if}
 
     <div class="counts muted">
-      <span>{t('popup.totalRules', { count: status?.totalRules?.toLocaleString() ?? '—' })}</span>
-      <span>{t('popup.manualRemote', { m: status?.manualCount ?? '—', r: status?.remoteCount ?? '—' })}</span>
+      <span>{t('popup_totalRules', { count: status?.totalRules?.toLocaleString() ?? '—' })}</span>
+      <span>{t('popup_manualRemote', { m: status?.manualCount ?? '—', r: status?.remoteCount ?? '—' })}</span>
     </div>
   </div>
 
   <div class="foot">
     <span class="muted">SiteFade</span>
     <span class="foot-actions">
-      <button class="btn small primary" onclick={openSettings}>{t('common.openSettings')}</button>
+      <button class="btn small primary" onclick={openSettings}>{t('common_openSettings')}</button>
     </span>
   </div>
 </div>

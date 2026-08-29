@@ -69,14 +69,14 @@ export async function addSource(
   try {
     u = new URL(url);
   } catch {
-    return { ok: false, source: null, outcome: null, error: 'error.invalidUrl' };
+    return { ok: false, source: null, outcome: null, error: 'error_invalidUrl' };
   }
   if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-    return { ok: false, source: null, outcome: null, error: 'error.httpOnly' };
+    return { ok: false, source: null, outcome: null, error: 'error_httpOnly' };
   }
   const existing = await loadSources();
   if (existing.some((s) => s.url === url)) {
-    return { ok: false, source: null, outcome: null, error: 'error.urlExists' };
+    return { ok: false, source: null, outcome: null, error: 'error_urlExists' };
   }
 
   const src: RemoteSource = {

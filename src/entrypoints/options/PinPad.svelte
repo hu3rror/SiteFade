@@ -84,24 +84,24 @@
     onkeydown={(e) => e.key === 'Enter' && submit()}
     disabled={disabled}
     autocomplete="off"
-    aria-label={t('pinpad.inputAria')}
+    aria-label={t('pinpad_inputAria')}
   />
 
   {#if error || disabled}
-    <div class="pinpad-err">{error || (disabled ? t('pinpad.disabled') : '')}</div>
+    <div class="pinpad-err">{error || (disabled ? t('pinpad_disabled') : '')}</div>
   {/if}
 
   <div class="pinpad-keypad">
     {#each keys as k (k)}
       <button class="pinpad-key" onclick={() => press(k)} disabled={disabled}>{k}</button>
     {/each}
-    <button class="pinpad-key ghost" onclick={clear} disabled={disabled} title={t('pinpad.clear')}>{t('pinpad.clear')}</button>
+    <button class="pinpad-key ghost" onclick={clear} disabled={disabled} title={t('pinpad_clear')}>{t('pinpad_clear')}</button>
     <button class="pinpad-key" onclick={() => press('0')} disabled={disabled}>0</button>
-    <button class="pinpad-key ghost" onclick={backspace} disabled={disabled} aria-label={t('pinpad.backspace')}>⌫</button>
+    <button class="pinpad-key ghost" onclick={backspace} disabled={disabled} aria-label={t('pinpad_backspace')}>⌫</button>
   </div>
 
   <div class="pinpad-actions">
-    <button class="btn" onclick={() => onCancel?.()} disabled={disabled}>{t('common.cancel')}</button>
-    <span class="muted" style="font-size:12px;align-self:center">{t('pinpad.fillHint')}</span>
+    <button class="btn" onclick={() => onCancel?.()} disabled={disabled}>{t('common_cancel')}</button>
+    <span class="muted" style="font-size:12px;align-self:center">{t('pinpad_fillHint')}</span>
   </div>
 </div>

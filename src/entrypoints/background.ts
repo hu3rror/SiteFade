@@ -115,7 +115,7 @@ async function syncAlarms() {
 
 async function handleMessage(msg: unknown): Promise<PopupResponse> {
   const m = msg as PopupMessage | null;
-  if (!m || typeof m.type !== 'string') return { ok: false, error: 'error.badMessage' };
+  if (!m || typeof m.type !== 'string') return { ok: false, error: 'error_badMessage' };
 
   switch (m.type) {
     case 'status': {
@@ -152,11 +152,11 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
       const raw = (m as { host?: unknown }).host;
       const url = typeof raw === 'string' ? raw : '';
       const host = hostnameOfUrl(url);
-      if (!host) return { ok: false, error: 'error.noHostname' };
+      if (!host) return { ok: false, error: 'error_noHostname' };
       const p = parseLine(host);
       // 裸域名/通配符（host）与 IP 字面量（exact-host）都可作为手动规则（票 05）
       if (!p || 'error' in p || (p.kind !== 'host' && p.kind !== 'exact-host')) {
-        return { ok: false, error: 'error.noHostname' };
+        return { ok: false, error: 'error_noHostname' };
       }
       const text = p.text;
 
@@ -166,7 +166,7 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
 
       const next = [...rules, { id: genId(), text }];
       const saved = await saveManualRules(next);
-      if (!saved) return { ok: false, error: 'error.saveFailed' };
+      if (!saved) return { ok: false, error: 'error_saveFailed' };
       await rebuildNow(); // 同步更新，popup 立即刷新即可见（票 08 防抖缓存）
       return { ok: true, action: 'added' };
     }
@@ -189,6 +189,6 @@ async function handleMessage(msg: unknown): Promise<PopupResponse> {
     }
 
     default:
-      return { ok: false, error: 'error.unknownMessage' };
+      return { ok: false, error: 'error_unknownMessage' };
   }
 }

@@ -48,8 +48,8 @@ export interface ParseResult {
 export function parseLine(line: string): ParsedRule | { error: string } | null {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith('#')) return null;
-  if (trimmed.length > MAX_RULE_LENGTH) return { error: 'error.tooLong' };
-  if (/\s/.test(trimmed)) return { error: 'error.hasWhitespace' };
+  if (trimmed.length > MAX_RULE_LENGTH) return { error: 'error_tooLong' };
+  if (/\s/.test(trimmed)) return { error: 'error_hasWhitespace' };
 
   // 精确 URL（http/https/file）
   if (/^[a-z]+:\/\//i.test(trimmed)) return parseExactUrl(trimmed);
@@ -60,27 +60,27 @@ export function parseLine(line: string): ParsedRule | { error: string } | null {
   // 通配符前缀（一个前缀字符 + 域名）
   if (trimmed.startsWith('*.')) {
     const host = normalizeHostname(trimmed.slice(2));
-    if (!host) return { error: 'error.invalidHost' };
+    if (!host) return { error: 'error_invalidHost' };
     return { text: `*.${host}`, kind: 'host', host, hostSemantics: 'star' };
   }
   if (trimmed.startsWith('+.')) {
     const host = normalizeHostname(trimmed.slice(2));
-    if (!host) return { error: 'error.invalidHost' };
+    if (!host) return { error: 'error_invalidHost' };
     return { text: `+.${host}`, kind: 'host', host, hostSemantics: 'plus' };
   }
   if (trimmed.startsWith('.')) {
     const host = normalizeHostname(trimmed.slice(1));
-    if (!host) return { error: 'error.invalidHost' };
+    if (!host) return { error: 'error_invalidHost' };
     return { text: `.${host}`, kind: 'host', host, hostSemantics: 'dot' };
   }
 
   // 方括号 IPv6 字面量（[::1] 或 [::1]:port）
   if (trimmed.startsWith('[')) {
     const m = trimmed.match(/^(\[[0-9a-fA-F:.]+\])(?::(\d{1,5}))?$/);
-    if (!m) return { error: 'error.invalidIpv6' };
+    if (!m) return { error: 'error_invalidIpv6' };
     const host = m[1]!.toLowerCase();
     const port = m[2]!;
-    if (port && !isValidPort(port)) return { error: 'error.invalidPort' };
+    if (port && !isValidPort(port)) return { error: 'error_invalidPort' };
     const exactHost = port ? `${host}:${port}` : host;
     return { text: exactHost, kind: 'exact-host', exactHost };
   }
@@ -88,17 +88,17 @@ export function parseLine(line: string): ParsedRule | { error: string } | null {
   // 带冒号 → 带端口条目 host:port
   if (trimmed.includes(':')) {
     const m = trimmed.match(/^([^:]+):(\d{1,5})$/);
-    if (!m) return { error: 'error.invalidPortEntry' };
+    if (!m) return { error: 'error_invalidPortEntry' };
     const host = normalizeHostname(m[1]!);
-    if (!host) return { error: 'error.invalidHost' };
-    if (!isValidPort(m[2]!)) return { error: 'error.invalidPort' };
+    if (!host) return { error: 'error_invalidHost' };
+    if (!isValidPort(m[2]!)) return { error: 'error_invalidPort' };
     const exactHost = `${host}:${m[2]!}`;
     return { text: exactHost, kind: 'exact-host', exactHost };
   }
 
   // 裸域名或 IPv4 字面量
   const host = normalizeHostname(trimmed);
-  if (!host) return { error: 'error.invalidHost' };
+  if (!host) return { error: 'error_invalidHost' };
   if (isIpv4Literal(host)) return { text: host, kind: 'exact-host', exactHost: host };
   return { text: host, kind: 'host', host, hostSemantics: 'plus' };
 }
@@ -150,18 +150,18 @@ function parseExactUrl(line: string): ParsedRule | { error: string } {
   try {
     u = new URL(line);
   } catch {
-    return { error: 'error.invalidUrl' };
+    return { error: 'error_invalidUrl' };
   }
   const scheme = u.protocol.slice(0, -1).toLowerCase();
   if (scheme === 'file') {
     const urlKey = `file://${u.pathname}`;
     return { text: urlKey, kind: 'exact-url', urlKey };
   }
-  if (scheme !== 'http' && scheme !== 'https') return { error: 'error.badScheme' };
-  if (!u.hostname) return { error: 'error.missingHost' };
+  if (scheme !== 'http' && scheme !== 'https') return { error: 'error_badScheme' };
+  if (!u.hostname) return { error: 'error_missingHost' };
 
   const host = u.hostname; // URL 已小写化并 IDN→punycode
-  if (!validHostSyntax(host)) return { error: 'error.invalidHost' };
+  if (!validHostSyntax(host)) return { error: 'error_invalidHost' };
 
   const port = u.port ? `:${u.port}` : '';
   const urlKey = `${scheme}://${host}${port}${u.pathname}`;

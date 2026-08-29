@@ -2,199 +2,487 @@
   "extDescription": {
     "message": "Removes visits to listed sites from browsing history the moment they are recorded."
   },
-  "common.openSettings": { "message": "Open settings" },
-  "common.cancel": { "message": "Cancel" },
-  "common.save": { "message": "Save" },
-  "common.edit": { "message": "Edit" },
-  "common.delete": { "message": "Delete" },
-  "common.manual": { "message": "Manual" },
-  "common.remote": { "message": "Remote" },
-  "common.refresh": { "message": "Refresh" },
-  "common.enable": { "message": "Enabled" },
-  "common.sourceRemote": { "message": "Remote \"{name}\"" },
-  "common.confirmRemoveSource": {
+  "common_openSettings": {
+    "message": "Open settings"
+  },
+  "common_cancel": {
+    "message": "Cancel"
+  },
+  "common_save": {
+    "message": "Save"
+  },
+  "common_edit": {
+    "message": "Edit"
+  },
+  "common_delete": {
+    "message": "Delete"
+  },
+  "common_manual": {
+    "message": "Manual"
+  },
+  "common_remote": {
+    "message": "Remote"
+  },
+  "common_refresh": {
+    "message": "Refresh"
+  },
+  "common_enable": {
+    "message": "Enabled"
+  },
+  "common_sourceRemote": {
+    "message": "Remote \"{name}\""
+  },
+  "common_confirmRemoveSource": {
     "message": "Delete remote source \"{name}\"? Its locally cached rules will be removed too."
   },
-
-  "popup.permissionBanner": {
+  "popup_permissionBanner": {
     "message": "History permission is off; auto-removal has stopped. Enable the \"History\" permission in the browser's extension settings."
   },
-  "popup.noHost": { "message": "(can't read current site)" },
-  "popup.matched": { "message": "Not recorded in history" },
-  "popup.unmatched": { "message": "Will be recorded in history" },
-  "popup.matchedLine": { "message": "Matched rule {rule} · {source}" },
-  "popup.unmatchedLine": { "message": "Not set to skip history · this site stays in your history" },
-  "popup.remoteRuleTitle": { "message": "This rule comes from a remote source; manage it in settings" },
-  "popup.remoteNote": { "message": "Matched a remote-source rule; manage it in settings" },
-  "popup.restoreRecord": { "message": "Restore history recording" },
-  "popup.skipRecord": { "message": "Skip history for this site" },
-  "popup.totalRules": { "message": "{count} rules total" },
-  "popup.manualRemote": { "message": "Manual {m} · Remote {r}" },
-  "popup.queryFailed": { "message": "Query failed" },
-  "popup.limitReached": { "message": "Manual rules reached the limit of {limit}" },
-  "popup.added": { "message": "Now skipping history for this site" },
-  "popup.exists": { "message": "Already on the list" },
-  "popup.removed": { "message": "History recording restored" },
-  "popup.failed": { "message": "Operation failed" },
-
-  "options.title": { "message": "Settings" },
-  "options.loading": { "message": "Loading…" },
-  "options.totalRules": { "message": "Total rules" },
-  "options.manualSync": { "message": "Manual (synced)" },
-  "options.remoteSources": { "message": "Remote sources" },
-  "options.remoteCountSuffix": { "message": "" },
-  "options.reset": { "message": "Reset settings" },
-  "options.resetHint": {
+  "popup_noHost": {
+    "message": "(can't read current site)"
+  },
+  "popup_matched": {
+    "message": "Not recorded in history"
+  },
+  "popup_unmatched": {
+    "message": "Will be recorded in history"
+  },
+  "popup_matchedLine": {
+    "message": "Matched rule {rule} · {source}"
+  },
+  "popup_unmatchedLine": {
+    "message": "Not set to skip history · this site stays in your history"
+  },
+  "popup_remoteRuleTitle": {
+    "message": "This rule comes from a remote source; manage it in settings"
+  },
+  "popup_remoteNote": {
+    "message": "Matched a remote-source rule; manage it in settings"
+  },
+  "popup_restoreRecord": {
+    "message": "Restore history recording"
+  },
+  "popup_skipRecord": {
+    "message": "Skip history for this site"
+  },
+  "popup_totalRules": {
+    "message": "{count} rules total"
+  },
+  "popup_manualRemote": {
+    "message": "Manual {m} · Remote {r}"
+  },
+  "popup_queryFailed": {
+    "message": "Query failed"
+  },
+  "popup_limitReached": {
+    "message": "Manual rules reached the limit of {limit}"
+  },
+  "popup_added": {
+    "message": "Now skipping history for this site"
+  },
+  "popup_exists": {
+    "message": "Already on the list"
+  },
+  "popup_removed": {
+    "message": "History recording restored"
+  },
+  "popup_failed": {
+    "message": "Operation failed"
+  },
+  "options_title": {
+    "message": "Settings"
+  },
+  "options_loading": {
+    "message": "Loading…"
+  },
+  "options_totalRules": {
+    "message": "Total rules"
+  },
+  "options_manualSync": {
+    "message": "Manual (synced)"
+  },
+  "options_remoteSources": {
+    "message": "Remote sources"
+  },
+  "options_remoteCountSuffix": {
+    "message": ""
+  },
+  "options_reset": {
+    "message": "Reset settings"
+  },
+  "options_resetHint": {
     "message": "Clears the PIN, local caches, and all remote sources (manual rules kept)"
   },
-  "options.resetConfirm": {
+  "options_resetConfirm": {
     "message": "Reset will clear the PIN, local caches, and all remote sources (manual rules kept). Continue?"
   },
-  "options.resetDone": { "message": "Reset complete" },
-
-  "appearance.title": { "message": "Appearance" },
-  "appearance.theme": { "message": "Theme" },
-  "appearance.themeSystem": { "message": "Follow system" },
-  "appearance.themeLight": { "message": "Light" },
-  "appearance.themeDark": { "message": "Dark" },
-  "appearance.language": { "message": "Language" },
-  "appearance.langFollow": { "message": "Follow browser" },
-  "appearance.langZh": { "message": "中文" },
-  "appearance.langEn": { "message": "English" },
-  "appearance.syncHint": { "message": "Theme and language sync across devices" },
-
-  "import.title": { "message": "Add rules" },
-  "import.hint": { "message": "Paste rules manually or add from a file; or pull a list from a remote URL" },
-  "import.pastePlaceholder": {
+  "options_resetDone": {
+    "message": "Reset complete"
+  },
+  "appearance_title": {
+    "message": "Appearance"
+  },
+  "appearance_theme": {
+    "message": "Theme"
+  },
+  "appearance_themeSystem": {
+    "message": "Follow system"
+  },
+  "appearance_themeLight": {
+    "message": "Light"
+  },
+  "appearance_themeDark": {
+    "message": "Dark"
+  },
+  "appearance_language": {
+    "message": "Language"
+  },
+  "appearance_langFollow": {
+    "message": "Follow browser"
+  },
+  "appearance_langZh": {
+    "message": "中文"
+  },
+  "appearance_langEn": {
+    "message": "English"
+  },
+  "appearance_syncHint": {
+    "message": "Theme and language sync across devices"
+  },
+  "import_title": {
+    "message": "Add rules"
+  },
+  "import_hint": {
+    "message": "Paste rules manually or add from a file; or pull a list from a remote URL"
+  },
+  "import_pastePlaceholder": {
     "message": "Paste one rule per line (supports # comments, wildcards *. +. ., IPs, ports, exact URLs)"
   },
-  "import.add": { "message": "Add" },
-  "import.localFile": { "message": "Local file" },
-  "import.summaryLimit": { "message": "Manual limit reached, nothing added" },
-  "import.added": { "message": "Added {count}" },
-  "import.duplicate": { "message": "Duplicate {count}" },
-  "import.invalid": { "message": "Invalid {count}" },
-  "import.detail": { "message": "Details" },
-  "import.collapse": { "message": "Collapse" },
-  "import.manualTotal": { "message": "Manual rules {total}/1000" },
-  "import.remoteTitle": { "message": "Remote sources" },
-  "import.intervalAria": { "message": "Auto-refresh interval" },
-  "import.remoteHint": {
+  "import_add": {
+    "message": "Add"
+  },
+  "import_localFile": {
+    "message": "Local file"
+  },
+  "import_summaryLimit": {
+    "message": "Manual limit reached, nothing added"
+  },
+  "import_added": {
+    "message": "Added {count}"
+  },
+  "import_duplicate": {
+    "message": "Duplicate {count}"
+  },
+  "import_invalid": {
+    "message": "Invalid {count}"
+  },
+  "import_detail": {
+    "message": "Details"
+  },
+  "import_collapse": {
+    "message": "Collapse"
+  },
+  "import_manualTotal": {
+    "message": "Manual rules {total}/1000"
+  },
+  "import_remoteTitle": {
+    "message": "Remote sources"
+  },
+  "import_intervalAria": {
+    "message": "Auto-refresh interval"
+  },
+  "import_remoteHint": {
     "message": "Content is stored locally only and not synced; refresh manually or on an interval"
   },
-  "import.disabled": { "message": "Disabled" },
-  "import.failedRepeatedly": { "message": "Repeated failures" },
-  "import.metaLine": { "message": "{count} rules · last success {time}" },
-  "import.autoRefresh": { "message": " · auto-refresh every {hours}h" },
-  "import.grantRetry": { "message": "Grant access & retry" },
-  "import.refreshing": { "message": "Refreshing…" },
-  "import.noSources": { "message": "No remote sources yet" },
-  "import.namePlaceholder": { "message": "Name (defaults to hostname)" },
-  "import.urlPlaceholder": { "message": "https://… (plain-text list, one rule per line)" },
-  "import.addAndFetch": { "message": "Add & fetch" },
-  "import.addSource": { "message": "+ Add remote source" },
-  "import.toastLimit": {
+  "import_disabled": {
+    "message": "Disabled"
+  },
+  "import_failedRepeatedly": {
+    "message": "Repeated failures"
+  },
+  "import_metaLine": {
+    "message": "{count} rules · last success {time}"
+  },
+  "import_autoRefresh": {
+    "message": " · auto-refresh every {hours}h"
+  },
+  "import_grantRetry": {
+    "message": "Grant access & retry"
+  },
+  "import_refreshing": {
+    "message": "Refreshing…"
+  },
+  "import_noSources": {
+    "message": "No remote sources yet"
+  },
+  "import_namePlaceholder": {
+    "message": "Name (defaults to hostname)"
+  },
+  "import_urlPlaceholder": {
+    "message": "https://… (plain-text list, one rule per line)"
+  },
+  "import_addAndFetch": {
+    "message": "Add & fetch"
+  },
+  "import_addSource": {
+    "message": "+ Add remote source"
+  },
+  "import_toastLimit": {
     "message": "Manual rules reached the limit of 1000; clean up or use a remote source"
   },
-  "import.toastAdded": { "message": "Added {count}" },
-  "import.toastRefreshOk": { "message": "Refresh successful" },
-  "import.toastRefreshFail": { "message": "Refresh failed ({label}: {detail})" },
-  "import.toastGrantDenied": { "message": "Access denied; cannot reach this source" },
-  "import.toastGranted": { "message": "Access granted, retrying…" },
-  "import.toastAddFail": { "message": "Failed to add" },
-  "import.toastAddOk": { "message": "Added and fetched successfully" },
-  "import.toastAddFirstFail": { "message": "Added (first fetch failed: {detail})" },
-
-  "source.kind.network": { "message": "Network error" },
-  "source.kind.http": { "message": "HTTP error" },
-  "source.kind.parse": { "message": "Parse failed" },
-
-  "time.never": { "message": "Never" },
-  "time.justNow": { "message": "Just now" },
-  "time.minutesAgo": { "message": "{n}m ago" },
-  "time.hoursAgo": { "message": "{n}h ago" },
-  "time.daysAgo": { "message": "{n}d ago" },
-
-  "rules.title": { "message": "Rule list" },
-  "rules.perPageAria": { "message": "Rules per page" },
-  "rules.meta": { "message": "{count} rules · manual {manual}/{limit}" },
-  "rules.search": { "message": "Search rules…" },
-  "rules.perPage": { "message": "{n} per page" },
-  "rules.colSource": { "message": "Source" },
-  "rules.colRule": { "message": "Rule" },
-  "rules.noMatch": { "message": "No matching rules" },
-  "rules.prev": { "message": "Prev" },
-  "rules.pageInfo": { "message": "Page {cur} / {total}" },
-  "rules.next": { "message": "Next" },
-  "rules.toastInvalid": { "message": "Invalid rule, not changed" },
-  "rules.toastExists": { "message": "This rule already exists" },
-  "rules.toastLimit": { "message": "Manual rules reached the limit of {limit}" },
-
-  "security.title": { "message": "Settings lock" },
-  "security.hint": {
+  "import_toastAdded": {
+    "message": "Added {count}"
+  },
+  "import_toastRefreshOk": {
+    "message": "Refresh successful"
+  },
+  "import_toastRefreshFail": {
+    "message": "Refresh failed ({label}: {detail})"
+  },
+  "import_toastGrantDenied": {
+    "message": "Access denied; cannot reach this source"
+  },
+  "import_toastGranted": {
+    "message": "Access granted, retrying…"
+  },
+  "import_toastAddFail": {
+    "message": "Failed to add"
+  },
+  "import_toastAddOk": {
+    "message": "Added and fetched successfully"
+  },
+  "import_toastAddFirstFail": {
+    "message": "Added (first fetch failed: {detail})"
+  },
+  "source_kind_network": {
+    "message": "Network error"
+  },
+  "source_kind_http": {
+    "message": "HTTP error"
+  },
+  "source_kind_parse": {
+    "message": "Parse failed"
+  },
+  "time_never": {
+    "message": "Never"
+  },
+  "time_justNow": {
+    "message": "Just now"
+  },
+  "time_minutesAgo": {
+    "message": "{n}m ago"
+  },
+  "time_hoursAgo": {
+    "message": "{n}h ago"
+  },
+  "time_daysAgo": {
+    "message": "{n}d ago"
+  },
+  "rules_title": {
+    "message": "Rule list"
+  },
+  "rules_perPageAria": {
+    "message": "Rules per page"
+  },
+  "rules_meta": {
+    "message": "{count} rules · manual {manual}/{limit}"
+  },
+  "rules_search": {
+    "message": "Search rules…"
+  },
+  "rules_perPage": {
+    "message": "{n} per page"
+  },
+  "rules_colSource": {
+    "message": "Source"
+  },
+  "rules_colRule": {
+    "message": "Rule"
+  },
+  "rules_noMatch": {
+    "message": "No matching rules"
+  },
+  "rules_prev": {
+    "message": "Prev"
+  },
+  "rules_pageInfo": {
+    "message": "Page {cur} / {total}"
+  },
+  "rules_next": {
+    "message": "Next"
+  },
+  "rules_toastInvalid": {
+    "message": "Invalid rule, not changed"
+  },
+  "rules_toastExists": {
+    "message": "This rule already exists"
+  },
+  "rules_toastLimit": {
+    "message": "Manual rules reached the limit of {limit}"
+  },
+  "security_title": {
+    "message": "Settings lock"
+  },
+  "security_hint": {
     "message": "Optional PIN lock (4 digits). Stores only a local SHA-256 hash — no plaintext, no network, no sync. Locks only the settings page; the toolbar popup is unaffected."
   },
-  "security.enabled": { "message": "PIN lock enabled" },
-  "security.change": { "message": "Change" },
-  "security.disable": { "message": "Disable" },
-  "security.enable": { "message": "Enable PIN lock" },
-  "security.notEnabled": { "message": "Not enabled" },
-  "security.pinFormat": { "message": "PIN must be 4 digits" },
-  "security.newPinFormat": { "message": "New PIN must be 4 digits" },
-  "security.mismatch": { "message": "Entries don't match; try again" },
-  "security.tooManyTries": { "message": "Too many attempts; try again in {seconds}s" },
-  "security.wrongPin": { "message": "Incorrect current PIN" },
-  "security.titleVerify": { "message": "Verify current PIN" },
-  "security.titleSet": { "message": "Set new PIN" },
-  "security.titleConfirm": { "message": "Confirm PIN" },
-  "security.hintVerify": { "message": "Verify before changing or disabling" },
-  "security.hintDigits": { "message": "4 digits" },
-  "security.hintConfirm": { "message": "Enter again to confirm" },
-  "security.toastEnabled": { "message": "PIN lock enabled" },
-  "security.toastDisabled": { "message": "PIN lock disabled" },
-  "security.toastChanged": { "message": "PIN changed" },
-  "security.forgotHint": {
+  "security_enabled": {
+    "message": "PIN lock enabled"
+  },
+  "security_change": {
+    "message": "Change"
+  },
+  "security_disable": {
+    "message": "Disable"
+  },
+  "security_enable": {
+    "message": "Enable PIN lock"
+  },
+  "security_notEnabled": {
+    "message": "Not enabled"
+  },
+  "security_pinFormat": {
+    "message": "PIN must be 4 digits"
+  },
+  "security_newPinFormat": {
+    "message": "New PIN must be 4 digits"
+  },
+  "security_mismatch": {
+    "message": "Entries don't match; try again"
+  },
+  "security_tooManyTries": {
+    "message": "Too many attempts; try again in {seconds}s"
+  },
+  "security_wrongPin": {
+    "message": "Incorrect current PIN"
+  },
+  "security_titleVerify": {
+    "message": "Verify current PIN"
+  },
+  "security_titleSet": {
+    "message": "Set new PIN"
+  },
+  "security_titleConfirm": {
+    "message": "Confirm PIN"
+  },
+  "security_hintVerify": {
+    "message": "Verify before changing or disabling"
+  },
+  "security_hintDigits": {
+    "message": "4 digits"
+  },
+  "security_hintConfirm": {
+    "message": "Enter again to confirm"
+  },
+  "security_toastEnabled": {
+    "message": "PIN lock enabled"
+  },
+  "security_toastDisabled": {
+    "message": "PIN lock disabled"
+  },
+  "security_toastChanged": {
+    "message": "PIN changed"
+  },
+  "security_forgotHint": {
     "message": "Forgot the PIN? Clear it via \"Reset settings\" at the bottom (also clears local caches and remote sources)."
   },
-
-  "pingate.locked": { "message": "Settings locked" },
-  "pingate.enterPin": { "message": "Enter PIN" },
-  "pingate.wrongPin": { "message": "Incorrect PIN, try again" },
-  "pingate.forgotHint": {
+  "pingate_locked": {
+    "message": "Settings locked"
+  },
+  "pingate_enterPin": {
+    "message": "Enter PIN"
+  },
+  "pingate_wrongPin": {
+    "message": "Incorrect PIN, try again"
+  },
+  "pingate_forgotHint": {
     "message": "Forgot the PIN? After reset you'll need to re-add remote sources"
   },
-
-  "pinpad.clear": { "message": "Clear" },
-  "pinpad.backspace": { "message": "Backspace" },
-  "pinpad.fillHint": { "message": "Auto-submits when 4 digits are entered" },
-  "pinpad.disabled": { "message": "Temporarily locked" },
-  "pinpad.inputAria": { "message": "PIN input" },
-
-  "export.title": { "message": "Export" },
-  "export.button": { "message": "Export current list .txt" },
-  "export.hint": {
+  "pinpad_clear": {
+    "message": "Clear"
+  },
+  "pinpad_backspace": {
+    "message": "Backspace"
+  },
+  "pinpad_fillHint": {
+    "message": "Auto-submits when 4 digits are entered"
+  },
+  "pinpad_disabled": {
+    "message": "Temporarily locked"
+  },
+  "pinpad_inputAria": {
+    "message": "PIN input"
+  },
+  "export_title": {
+    "message": "Export"
+  },
+  "export_button": {
+    "message": "Export current list .txt"
+  },
+  "export_hint": {
     "message": "{count} rules (deduped, manual first). Data stays local; you can add a PIN lock in settings."
   },
-
-  "error.tooLong": { "message": "Exceeds 2048 characters" },
-  "error.hasWhitespace": { "message": "Contains whitespace" },
-  "error.invalidHost": { "message": "Invalid hostname" },
-  "error.invalidIpv6": { "message": "Invalid IPv6 literal" },
-  "error.invalidPort": { "message": "Invalid port range" },
-  "error.invalidPortEntry": { "message": "Invalid host:port entry" },
-  "error.invalidUrl": { "message": "Could not parse URL" },
-  "error.badScheme": { "message": "Unsupported scheme" },
-  "error.missingHost": { "message": "Missing hostname" },
-  "error.httpOnly": { "message": "Only http/https sources are supported" },
-  "error.urlExists": { "message": "This URL is already in the source list" },
-  "error.defaultSourceName": { "message": "Remote source" },
-  "error.timeout": { "message": "Request timed out" },
-  "error.network": { "message": "Network error" },
-  "error.responseTooLarge": { "message": "Response exceeds the 2 MB limit" },
-  "error.readFailed": { "message": "Failed to read response" },
-  "error.badMessage": { "message": "Malformed message" },
-  "error.noHostname": { "message": "Could not parse the current site hostname" },
-  "error.saveFailed": { "message": "Save failed (sync quota exceeded?)" },
-  "error.unknownMessage": { "message": "Unknown message" },
-  "error.noBackground": { "message": "Background not responding" }
+  "error_tooLong": {
+    "message": "Exceeds 2048 characters"
+  },
+  "error_hasWhitespace": {
+    "message": "Contains whitespace"
+  },
+  "error_invalidHost": {
+    "message": "Invalid hostname"
+  },
+  "error_invalidIpv6": {
+    "message": "Invalid IPv6 literal"
+  },
+  "error_invalidPort": {
+    "message": "Invalid port range"
+  },
+  "error_invalidPortEntry": {
+    "message": "Invalid host:port entry"
+  },
+  "error_invalidUrl": {
+    "message": "Could not parse URL"
+  },
+  "error_badScheme": {
+    "message": "Unsupported scheme"
+  },
+  "error_missingHost": {
+    "message": "Missing hostname"
+  },
+  "error_httpOnly": {
+    "message": "Only http/https sources are supported"
+  },
+  "error_urlExists": {
+    "message": "This URL is already in the source list"
+  },
+  "error_defaultSourceName": {
+    "message": "Remote source"
+  },
+  "error_timeout": {
+    "message": "Request timed out"
+  },
+  "error_network": {
+    "message": "Network error"
+  },
+  "error_responseTooLarge": {
+    "message": "Response exceeds the 2 MB limit"
+  },
+  "error_readFailed": {
+    "message": "Failed to read response"
+  },
+  "error_badMessage": {
+    "message": "Malformed message"
+  },
+  "error_noHostname": {
+    "message": "Could not parse the current site hostname"
+  },
+  "error_saveFailed": {
+    "message": "Save failed (sync quota exceeded?)"
+  },
+  "error_unknownMessage": {
+    "message": "Unknown message"
+  },
+  "error_noBackground": {
+    "message": "Background not responding"
+  }
 }

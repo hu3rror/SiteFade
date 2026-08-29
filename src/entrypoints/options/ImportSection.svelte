@@ -32,9 +32,9 @@
       const res = await importManualRules(text);
       summary = res;
       if (res.limitHit) {
-        onToast(t('import.toastLimit'));
+        onToast(t('import_toastLimit'));
       } else if (res.added > 0) {
-        onToast(t('import.toastAdded', { count: res.added }));
+        onToast(t('import_toastAdded', { count: res.added }));
       }
       text = '';
       onChanged();
@@ -65,14 +65,14 @@
   let refreshingId = $state<string | null>(null);
 
   function fmtTime(ms: number | null): string {
-    if (!ms) return t('time.never');
+    if (!ms) return t('time_never');
     const diff = Date.now() - ms;
     const min = Math.floor(diff / 60_000);
-    if (min < 1) return t('time.justNow');
-    if (min < 60) return t('time.minutesAgo', { n: min });
+    if (min < 1) return t('time_justNow');
+    if (min < 60) return t('time_minutesAgo', { n: min });
     const h = Math.floor(min / 60);
-    if (h < 24) return t('time.hoursAgo', { n: h });
-    return t('time.daysAgo', { n: Math.floor(h / 24) });
+    if (h < 24) return t('time_hoursAgo', { n: h });
+    return t('time_daysAgo', { n: Math.floor(h / 24) });
   }
 
   function statusDot(s: RemoteSource): string {
@@ -93,11 +93,11 @@
     try {
       const res = await refreshSource(id, { isAuto: false });
       if (res.outcome?.ok) {
-        onToast(t('import.toastRefreshOk'));
+        onToast(t('import_toastRefreshOk'));
       } else if (res.outcome) {
         const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
         onToast(
-          t('import.toastRefreshFail', {
+          t('import_toastRefreshFail', {
             label: t(label),
             detail: t(res.outcome.detail ?? ''),
           }),
@@ -114,18 +114,18 @@
     if (refreshingId) return;
     const granted = await grantOrigin(s.url); // 必须是点击处理器里第一个异步调用
     if (!granted) {
-      onToast(t('import.toastGrantDenied'));
+      onToast(t('import_toastGrantDenied'));
       return;
     }
-    onToast(t('import.toastGranted'));
+    onToast(t('import_toastGranted'));
     refreshingId = s.id;
     try {
       const res = await refreshSource(s.id, { isAuto: false });
-      if (res.outcome?.ok) onToast(t('import.toastRefreshOk'));
+      if (res.outcome?.ok) onToast(t('import_toastRefreshOk'));
       else if (res.outcome) {
         const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
         onToast(
-          t('import.toastRefreshFail', {
+          t('import_toastRefreshFail', {
             label: t(label),
             detail: t(res.outcome.detail ?? ''),
           }),
@@ -149,7 +149,7 @@
   }
 
   async function remove(id: string, name: string) {
-    if (!confirm(t('common.confirmRemoveSource', { name }))) return;
+    if (!confirm(t('common_confirmRemoveSource', { name }))) return;
     await removeSource(id);
     onChanged();
   }
@@ -160,9 +160,9 @@
     try {
       const res = await addSource(newUrl.trim(), newName.trim() || defaultSourceName(newUrl.trim()));
       if (!res.ok) {
-        onToast(t(res.error ?? 'import.toastAddFail'));
+        onToast(t(res.error ?? 'import_toastAddFail'));
       } else {
-        onToast(res.outcome?.ok ? t('import.toastAddOk') : t('import.toastAddFirstFail', { detail: t(res.outcome?.detail ?? '') }));
+        onToast(res.outcome?.ok ? t('import_toastAddOk') : t('import_toastAddFirstFail', { detail: t(res.outcome?.detail ?? '') }));
         newName = '';
         newUrl = '';
         showAdd = false;
@@ -174,35 +174,35 @@
   }
 </script>
 
-<div class="sec-title">{t('import.title')}</div>
+<div class="sec-title">{t('import_title')}</div>
 
-<p class="muted" style="font-size:12px">{t('import.hint')}</p>
+<p class="muted" style="font-size:12px">{t('import_hint')}</p>
 <textarea
   rows="3"
-  placeholder={t('import.pastePlaceholder')}
+  placeholder={t('import_pastePlaceholder')}
   value={text}
   oninput={(e) => (text = e.currentTarget.value)}
 ></textarea>
 <div class="import-actions">
-  <button class="btn primary" onclick={doImport} disabled={busy || !text.trim()}>{t('import.add')}</button>
-  <button class="btn" onclick={pickFile} disabled={busy}>{t('import.localFile')}</button>
+  <button class="btn primary" onclick={doImport} disabled={busy || !text.trim()}>{t('import_add')}</button>
+  <button class="btn" onclick={pickFile} disabled={busy}>{t('import_localFile')}</button>
 </div>
 
 {#if summary}
   <div class="import-summary">
     {#if summary.limitHit}
-      <span class="badge danger">{t('import.summaryLimit')}</span>
+      <span class="badge danger">{t('import_summaryLimit')}</span>
     {:else}
-      <span class="badge ok">{t('import.added', { count: summary.added })}</span>
-      <span class="badge">{t('import.duplicate', { count: summary.duplicate })}</span>
+      <span class="badge ok">{t('import_added', { count: summary.added })}</span>
+      <span class="badge">{t('import_duplicate', { count: summary.duplicate })}</span>
     {/if}
     {#if summary.invalid > 0}
       <span class="badge danger">
-        {t('import.invalid', { count: summary.invalid })}
-        <button class="btn-link" onclick={() => (showDetail = !showDetail)}>{showDetail ? t('import.collapse') : t('import.detail')}</button>
+        {t('import_invalid', { count: summary.invalid })}
+        <button class="btn-link" onclick={() => (showDetail = !showDetail)}>{showDetail ? t('import_collapse') : t('import_detail')}</button>
       </span>
     {/if}
-    <span class="muted">{t('import.manualTotal', { total: summary.total })}</span>
+    <span class="muted">{t('import_manualTotal', { total: summary.total })}</span>
   </div>
   {#if showDetail && summary.invalidDetail.length}
     <div class="invalid-detail">
@@ -214,8 +214,8 @@
 {/if}
 
 <div class="sec-title sub">
-  {t('import.remoteTitle')}
-  <span class="muted" style="font-size:12px;font-weight:400">{t('import.remoteHint')}</span>
+  {t('import_remoteTitle')}
+  <span class="muted" style="font-size:12px;font-weight:400">{t('import_remoteHint')}</span>
 </div>
 
 {#each sources as s (s.id)}
@@ -225,15 +225,15 @@
       <div class="source-name">
         {s.name}
         {#if !s.enabled}
-          <span class="badge off">{t('import.disabled')}</span>
+          <span class="badge off">{t('import_disabled')}</span>
         {/if}
         {#if s.disabledByFailures}
-          <span class="badge danger">{t('import.failedRepeatedly')}</span>
+          <span class="badge danger">{t('import_failedRepeatedly')}</span>
         {/if}
       </div>
       <div class="source-meta">
-        {t('import.metaLine', { count: s.ruleCount, time: fmtTime(s.lastSuccessAt) })}
-        {#if s.refreshHours}<span>{t('import.autoRefresh', { hours: s.refreshHours })}</span>{/if}
+        {t('import_metaLine', { count: s.ruleCount, time: fmtTime(s.lastSuccessAt) })}
+        {#if s.refreshHours}<span>{t('import_autoRefresh', { hours: s.refreshHours })}</span>{/if}
       </div>
       <div class="source-meta">{s.url}</div>
       {#if s.lastError}
@@ -243,14 +243,14 @@
     <div class="source-ops">
       <label class="muted" style="font-size:12px">
         <input type="checkbox" checked={s.enabled} onchange={(e) => toggle(s.id, e.currentTarget.checked)} />
-        {t('common.enable')}
+        {t('common_enable')}
       </label>
       <select
-        aria-label={t('import.intervalAria')}
+        aria-label={t('import_intervalAria')}
         value={s.refreshHours ?? ''}
         onchange={(e) => changeInterval(s.id, e.currentTarget.value)}
       >
-        <option value="">{t('common.manual')}</option>
+        <option value="">{t('common_manual')}</option>
         <option value="1">1h</option>
         <option value="6">6h</option>
         <option value="12">12h</option>
@@ -258,34 +258,34 @@
       </select>
       {#if s.lastError?.kind === 'network'}
         <button class="btn small" onclick={() => grantAndRefresh(s)} disabled={refreshingId !== null}>
-          {t('import.grantRetry')}
+          {t('import_grantRetry')}
         </button>
       {/if}
       <button class="btn small" onclick={() => refresh(s.id)} disabled={refreshingId !== null}>
-        {refreshingId === s.id ? t('import.refreshing') : t('common.refresh')}
+        {refreshingId === s.id ? t('import_refreshing') : t('common_refresh')}
       </button>
-      <button class="btn small danger" onclick={() => remove(s.id, s.name)}>{t('common.delete')}</button>
+      <button class="btn small danger" onclick={() => remove(s.id, s.name)}>{t('common_delete')}</button>
     </div>
   </div>
 {/each}
 
 {#if sources.length === 0}
-  <div class="muted" style="text-align:center;padding:12px">{t('import.noSources')}</div>
+  <div class="muted" style="text-align:center;padding:12px">{t('import_noSources')}</div>
 {/if}
 
 {#if showAdd}
   <div class="add-source">
-    <input type="text" placeholder={t('import.namePlaceholder')} value={newName} oninput={(e) => (newName = e.currentTarget.value)} />
+    <input type="text" placeholder={t('import_namePlaceholder')} value={newName} oninput={(e) => (newName = e.currentTarget.value)} />
     <input
       type="url"
-      placeholder={t('import.urlPlaceholder')}
+      placeholder={t('import_urlPlaceholder')}
       value={newUrl}
       oninput={(e) => (newUrl = e.currentTarget.value)}
       onkeydown={(e) => e.key === 'Enter' && doAdd()}
     />
-    <button class="btn primary" onclick={doAdd} disabled={adding || !newUrl.trim()}>{t('import.addAndFetch')}</button>
-    <button class="btn" onclick={() => (showAdd = false)}>{t('common.cancel')}</button>
+    <button class="btn primary" onclick={doAdd} disabled={adding || !newUrl.trim()}>{t('import_addAndFetch')}</button>
+    <button class="btn" onclick={() => (showAdd = false)}>{t('common_cancel')}</button>
   </div>
 {:else}
-  <button class="btn" onclick={() => (showAdd = true)}>{t('import.addSource')}</button>
+  <button class="btn" onclick={() => (showAdd = true)}>{t('import_addSource')}</button>
 {/if}

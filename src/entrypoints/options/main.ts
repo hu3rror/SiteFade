@@ -12,7 +12,7 @@ async function boot() {
   applyTheme(settings.theme);
   await initI18n(settings.language);
   document.documentElement.lang = currentLang() === 'zh_CN' ? 'zh-CN' : 'en';
-  document.title = `SiteFade ${t('options.title')}`;
+  document.title = `SiteFade ${t('options_title')}`;
   return mount(App, {
     target: document.getElementById('app')!,
   });

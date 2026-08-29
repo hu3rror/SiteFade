@@ -16,10 +16,10 @@
   }
 </script>
 
-<div class="sec-title">{t('export.title')}</div>
+<div class="sec-title">{t('export_title')}</div>
 <div style="display:flex;gap:10px;align-items:center">
-  <button class="btn" onclick={exportTxt} disabled={allRuleTexts.length === 0}>{t('export.button')}</button>
+  <button class="btn" onclick={exportTxt} disabled={allRuleTexts.length === 0}>{t('export_button')}</button>
   <span class="muted" style="font-size:12px">
-    {t('export.hint', { count: allRuleTexts.length.toLocaleString() })}
+    {t('export_hint', { count: allRuleTexts.length.toLocaleString() })}
   </span>
 </div>

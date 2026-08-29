@@ -51,13 +51,13 @@
   }
 
   async function doReset() {
-    if (resetting || !confirm(t('options.resetConfirm'))) return;
+    if (resetting || !confirm(t('options_resetConfirm'))) return;
     resetting = true;
     try {
       await resetSettings();
       unlocked = true; // PIN 已清，若有锁定状态也解除
       await reload();
-      notify(t('options.resetDone'));
+      notify(t('options_resetDone'));
     } finally {
       resetting = false;
     }
@@ -73,7 +73,7 @@
 </script>
 
 {#if !overview}
-  <div class="options" style="color:var(--muted);text-align:center">{t('options.loading')}</div>
+  <div class="options" style="color:var(--muted);text-align:center">{t('options_loading')}</div>
 {:else if overview.pinEnabled && !unlocked}
   <div class="options">
     <PinGate onUnlock={() => (unlocked = true)} />
@@ -83,24 +83,24 @@
     <header class="ohead">
       <div class="logo">SF</div>
       <h1>SiteFade</h1>
-      <span class="sub">{t('options.title')}</span>
+      <span class="sub">{t('options_title')}</span>
     </header>
 
     <div class="stats">
       <div class="stat">
-        <div class="label">{t('options.totalRules')}</div>
+        <div class="label">{t('options_totalRules')}</div>
         <div class="value">{overview.totalRules.toLocaleString()}</div>
       </div>
       <div class="stat">
-        <div class="label">{t('options.manualSync')}</div>
+        <div class="label">{t('options_manualSync')}</div>
         <div class="value">
           {overview.manualRules.length}
           <span class="sub">/1000</span>
         </div>
       </div>
       <div class="stat">
-        <div class="label">{t('options.remoteSources')}</div>
-        <div class="value">{overview.sources.length}<span class="sub">{t('options.remoteCountSuffix')}</span></div>
+        <div class="label">{t('options_remoteSources')}</div>
+        <div class="value">{overview.sources.length}<span class="sub">{t('options_remoteCountSuffix')}</span></div>
       </div>
     </div>
 
@@ -129,42 +129,42 @@
     </section>
 
     <section class="card">
-      <div class="sec-title">{t('appearance.title')}</div>
+      <div class="sec-title">{t('appearance_title')}</div>
       <div class="appearance-row">
-        <span class="appearance-label">{t('appearance.theme')}</span>
+        <span class="appearance-label">{t('appearance_theme')}</span>
         <div class="theme-switch">
           <button
             class="btn small {overview.settings.theme === 'system' ? 'active' : ''}"
             onclick={() => onThemeChange('system')}
-          >{t('appearance.themeSystem')}</button>
+          >{t('appearance_themeSystem')}</button>
           <button
             class="btn small {overview.settings.theme === 'light' ? 'active' : ''}"
             onclick={() => onThemeChange('light')}
-          >{t('appearance.themeLight')}</button>
+          >{t('appearance_themeLight')}</button>
           <button
             class="btn small {overview.settings.theme === 'dark' ? 'active' : ''}"
             onclick={() => onThemeChange('dark')}
-          >{t('appearance.themeDark')}</button>
+          >{t('appearance_themeDark')}</button>
         </div>
       </div>
       <div class="appearance-row" style="margin-top:10px">
-        <span class="appearance-label">{t('appearance.language')}</span>
+        <span class="appearance-label">{t('appearance_language')}</span>
         <select
           class="lang-select"
           value={overview.settings.language ?? ''}
           onchange={(e) => onLanguageChange(e.currentTarget.value || null)}
         >
-          <option value="">{t('appearance.langFollow')}</option>
-          <option value="zh_CN">{t('appearance.langZh')}</option>
-          <option value="en">{t('appearance.langEn')}</option>
+          <option value="">{t('appearance_langFollow')}</option>
+          <option value="zh_CN">{t('appearance_langZh')}</option>
+          <option value="en">{t('appearance_langEn')}</option>
         </select>
       </div>
-      <div class="muted" style="font-size:12px;margin-top:10px">{t('appearance.syncHint')}</div>
+      <div class="muted" style="font-size:12px;margin-top:10px">{t('appearance_syncHint')}</div>
     </section>
 
     <div class="reset-bar">
-      <button class="btn danger" onclick={doReset} disabled={resetting}>{t('options.reset')}</button>
-      <span class="muted" style="font-size:12px">{t('options.resetHint')}</span>
+      <button class="btn danger" onclick={doReset} disabled={resetting}>{t('options_reset')}</button>
+      <span class="muted" style="font-size:12px">{t('options_resetHint')}</span>
     </div>
   </div>
 {/if}

@@ -49,7 +49,7 @@
   // 设置新 PIN：阶段 1（输入）→ 阶段 2（确认）
   function onSet(pin: string) {
     if (!isValidPin(pin)) {
-      error = t('security.pinFormat');
+      error = t('security_pinFormat');
       return;
     }
     pendingPin = pin;
@@ -58,11 +58,11 @@
   }
   async function onConfirm(pin: string) {
     if (pin !== pendingPin) {
-      error = t('security.mismatch');
+      error = t('security_mismatch');
       mode = 'set';
       return;
     }
-    await persist(await hashPin(pin), t('security.toastEnabled'));
+    await persist(await hashPin(pin), t('security_toastEnabled'));
   }
 
   // 验证当前 PIN（修改 / 关闭前置）
@@ -74,7 +74,7 @@
     if (res === 'ok') {
       error = '';
       if (pendingAction === 'disable') {
-        await persist(null, t('security.toastDisabled'));
+        await persist(null, t('security_toastDisabled'));
       } else {
         pendingPin = '';
         mode = 'change';
@@ -82,16 +82,16 @@
       return;
     }
     if (res === 'locked') {
-      error = t('security.tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
+      error = t('security_tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
     } else {
-      error = t('security.wrongPin');
+      error = t('security_wrongPin');
     }
   }
 
   // 修改 PIN：阶段 1 → 阶段 2
   function onChange(pin: string) {
     if (!isValidPin(pin)) {
-      error = t('security.newPinFormat');
+      error = t('security_newPinFormat');
       return;
     }
     pendingPin = pin;
@@ -100,11 +100,11 @@
   }
   async function onConfirmChange(pin: string) {
     if (pin !== pendingPin) {
-      error = t('security.mismatch');
+      error = t('security_mismatch');
       mode = 'change';
       return;
     }
-    await persist(await hashPin(pin), t('security.toastChanged'));
+    await persist(await hashPin(pin), t('security_toastChanged'));
   }
 
   function handlerFor(m: Mode) {
@@ -119,31 +119,31 @@
   }
 
   const padTitle = $derived(
-    mode === 'verify' ? t('security.titleVerify')
-    : mode === 'set' || mode === 'change' ? t('security.titleSet')
-    : t('security.titleConfirm'),
+    mode === 'verify' ? t('security_titleVerify')
+    : mode === 'set' || mode === 'change' ? t('security_titleSet')
+    : t('security_titleConfirm'),
   );
   const padHint = $derived(
-    mode === 'verify' ? t('security.hintVerify')
-    : mode === 'set' || mode === 'change' ? t('security.hintDigits')
-    : t('security.hintConfirm'),
+    mode === 'verify' ? t('security_hintVerify')
+    : mode === 'set' || mode === 'change' ? t('security_hintDigits')
+    : t('security_hintConfirm'),
   );
 </script>
 
-<div class="sec-title">{t('security.title')}</div>
+<div class="sec-title">{t('security_title')}</div>
 <p class="muted" style="font-size:12px">
-  {t('security.hint')}
+  {t('security_hint')}
 </p>
 
 {#if mode === 'idle'}
   <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
     {#if pinEnabled}
-      <span class="badge ok">{t('security.enabled')}</span>
-      <button class="btn small" onclick={() => { pendingAction = 'change'; error = ''; mode = 'verify'; }}>{t('security.change')}</button>
-      <button class="btn small danger" onclick={() => { pendingAction = 'disable'; error = ''; mode = 'verify'; }}>{t('security.disable')}</button>
+      <span class="badge ok">{t('security_enabled')}</span>
+      <button class="btn small" onclick={() => { pendingAction = 'change'; error = ''; mode = 'verify'; }}>{t('security_change')}</button>
+      <button class="btn small danger" onclick={() => { pendingAction = 'disable'; error = ''; mode = 'verify'; }}>{t('security_disable')}</button>
     {:else}
-      <button class="btn" onclick={() => { pendingAction = null; error = ''; mode = 'set'; }}>{t('security.enable')}</button>
-      <span class="muted" style="font-size:12px">{t('security.notEnabled')}</span>
+      <button class="btn" onclick={() => { pendingAction = null; error = ''; mode = 'set'; }}>{t('security_enable')}</button>
+      <span class="muted" style="font-size:12px">{t('security_notEnabled')}</span>
     {/if}
   </div>
 {:else}
@@ -156,6 +156,6 @@
       onComplete={handlerFor(mode) ?? (() => {})}
       onCancel={reset}
     />
-    <div class="pin-note">{t('security.forgotHint')}</div>
+    <div class="pin-note">{t('security_forgotHint')}</div>
   </div>
 {/if}

@@ -42,9 +42,9 @@
   }
 
   function sourceLabel(row: RuleRow): string {
-    if (row.sourceRef === 'manual') return t('common.manual');
+    if (row.sourceRef === 'manual') return t('common_manual');
     const id = row.sourceRef.slice('remote:'.length);
-    return sourceNames[id] ? t('common.sourceRemote', { name: sourceNames[id] }) : t('common.remote');
+    return sourceNames[id] ? t('common_sourceRemote', { name: sourceNames[id] }) : t('common_remote');
   }
 
   async function removeManual(text: string) {
@@ -59,17 +59,17 @@
     if (!t2 || t2 === oldText) return;
     const p = parseLine(t2);
     if (!p || 'error' in p) {
-      onToast(t('rules.toastInvalid'));
+      onToast(t('rules_toastInvalid'));
       return;
     }
     const rules = await loadManualRules();
     const others = rules.filter((r) => r.text !== oldText);
     if (others.some((r) => r.text === p.text)) {
-      onToast(t('rules.toastExists'));
+      onToast(t('rules_toastExists'));
       return;
     }
     if (others.length >= MANUAL_LIMIT) {
-      onToast(t('rules.toastLimit', { limit: MANUAL_LIMIT }));
+      onToast(t('rules_toastLimit', { limit: MANUAL_LIMIT }));
       return;
     }
     await saveManualRules([...others, { id: genId(), text: p.text }]);
@@ -86,38 +86,38 @@
 </script>
 
 <div class="sec-title">
-  {t('rules.title')}
-  <span class="muted" style="font-size:12px;font-weight:400">{t('rules.meta', { count: filtered.length.toLocaleString(), manual: manualCount, limit: MANUAL_LIMIT })}</span>
+  {t('rules_title')}
+  <span class="muted" style="font-size:12px;font-weight:400">{t('rules_meta', { count: filtered.length.toLocaleString(), manual: manualCount, limit: MANUAL_LIMIT })}</span>
 </div>
 
 <div class="rules-toolbar">
   <input
     class="search"
     type="text"
-    placeholder={t('rules.search')}
+    placeholder={t('rules_search')}
     value={query}
     oninput={(e) => { query = e.currentTarget.value; page = 1; }}
   />
   <select
     class="pagesize"
-    aria-label={t('rules.perPageAria')}
+    aria-label={t('rules_perPageAria')}
     value={pageSize}
     onchange={(e) => onPageSizeChange(Number(e.currentTarget.value))}
   >
     {#each [10, 25, 50, 100, 200] as n}
-      <option value={n} selected={pageSize === n}>{t('rules.perPage', { n })}</option>
+      <option value={n} selected={pageSize === n}>{t('rules_perPage', { n })}</option>
     {/each}
   </select>
 </div>
 
 <table>
   <thead>
-    <tr><th style="width:70px">{t('rules.colSource')}</th><th>{t('rules.colRule')}</th><th style="width:120px"></th></tr>
+    <tr><th style="width:70px">{t('rules_colSource')}</th><th>{t('rules_colRule')}</th><th style="width:120px"></th></tr>
   </thead>
   <tbody>
     {#each pageRows as row, i (row.text)}
       <tr>
-        <td><span class="badge {row.sourceRef === 'manual' ? 'manual' : 'remote'}">{row.sourceRef === 'manual' ? t('common.manual') : t('common.remote')}</span></td>
+        <td><span class="badge {row.sourceRef === 'manual' ? 'manual' : 'remote'}">{row.sourceRef === 'manual' ? t('common_manual') : t('common_remote')}</span></td>
         <td>
           {#if editing === row.text && row.sourceRef === 'manual'}
             <div style="display:flex;gap:6px">
@@ -126,8 +126,8 @@
                 oninput={(e) => (editText = e.currentTarget.value)}
                 onkeydown={(e) => e.key === 'Enter' && saveEdit(row.text, editText)}
               />
-              <button class="btn small primary" onclick={() => saveEdit(row.text, editText)}>{t('common.save')}</button>
-              <button class="btn small" onclick={() => (editing = null)}>{t('common.cancel')}</button>
+              <button class="btn small primary" onclick={() => saveEdit(row.text, editText)}>{t('common_save')}</button>
+              <button class="btn small" onclick={() => (editing = null)}>{t('common_cancel')}</button>
             </div>
           {:else}
             <span class="rule-text">{row.text}</span>
@@ -136,8 +136,8 @@
         <td>
           {#if row.sourceRef === 'manual'}
             <div class="row-actions">
-              <button class="btn small" onclick={() => startEdit(row.text)}>{t('common.edit')}</button>
-              <button class="btn small danger" onclick={() => removeManual(row.text)}>{t('common.delete')}</button>
+              <button class="btn small" onclick={() => startEdit(row.text)}>{t('common_edit')}</button>
+              <button class="btn small danger" onclick={() => removeManual(row.text)}>{t('common_delete')}</button>
             </div>
           {:else}
             <span class="muted" style="font-size:11px">{sourceLabel(row)}</span>
@@ -149,11 +149,11 @@
 </table>
 
 {#if filtered.length === 0}
-  <div class="muted" style="text-align:center;padding:14px">{t('rules.noMatch')}</div>
+  <div class="muted" style="text-align:center;padding:14px">{t('rules_noMatch')}</div>
 {/if}
 
 <div class="pager">
-  <button class="btn small" onclick={() => setPage(curPage - 1)} disabled={curPage <= 1}>{t('rules.prev')}</button>
-  <span class="info">{t('rules.pageInfo', { cur: curPage, total: totalPages })}</span>
-  <button class="btn small" onclick={() => setPage(curPage + 1)} disabled={curPage >= totalPages}>{t('rules.next')}</button>
+  <button class="btn small" onclick={() => setPage(curPage - 1)} disabled={curPage <= 1}>{t('rules_prev')}</button>
+  <span class="info">{t('rules_pageInfo', { cur: curPage, total: totalPages })}</span>
+  <button class="btn small" onclick={() => setPage(curPage + 1)} disabled={curPage >= totalPages}>{t('rules_next')}</button>
 </div>

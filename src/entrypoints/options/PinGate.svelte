@@ -37,14 +37,14 @@
       return;
     }
     if (res === 'locked') {
-      error = t('security.tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
+      error = t('security_tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
     } else {
-      error = t('pingate.wrongPin');
+      error = t('pingate_wrongPin');
     }
   }
 
   async function doReset() {
-    if (resetting || !confirm(t('options.resetConfirm'))) return;
+    if (resetting || !confirm(t('options_resetConfirm'))) return;
     resetting = true;
     try {
       await resetSettings();
@@ -58,19 +58,19 @@
 <div class="lock-screen">
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
-    <h2>{t('pingate.locked')}</h2>
+    <h2>{t('pingate_locked')}</h2>
     <PinPad
-      title={t('pingate.enterPin')}
-      hint={t('security.hintDigits')}
+      title={t('pingate_enterPin')}
+      hint={t('security_hintDigits')}
       error={error}
       disabled={lockRemaining > 0}
       onComplete={tryPin}
     />
     <button class="btn danger" onclick={doReset} disabled={resetting} style="margin-top:12px">
-      {t('options.reset')}
+      {t('options_reset')}
     </button>
     <div class="muted" style="font-size:11px;margin-top:6px">
-      {t('pingate.forgotHint')}
+      {t('pingate_forgotHint')}
     </div>
   </div>
 </div>
