@@ -1,5 +1,7 @@
 <script lang="ts">
   // 导出当前清单（票 09）：全部去重规则（手动优先）下载为 .txt。
+  import { t } from '../../lib/i18n.svelte';
+
   let { allRuleTexts }: { allRuleTexts: string[] } = $props();
 
   function exportTxt() {
@@ -14,10 +16,10 @@
   }
 </script>
 
-<div class="sec-title">导出</div>
+<div class="sec-title">{t('export.title')}</div>
 <div style="display:flex;gap:10px;align-items:center">
-  <button class="btn" onclick={exportTxt} disabled={allRuleTexts.length === 0}>导出当前清单 .txt</button>
+  <button class="btn" onclick={exportTxt} disabled={allRuleTexts.length === 0}>{t('export.button')}</button>
   <span class="muted" style="font-size:12px">
-    共 {allRuleTexts.length.toLocaleString()} 条（去重、手动优先）。数据仅存本机；设置页可加 PIN 锁。
+    {t('export.hint', { count: allRuleTexts.length.toLocaleString() })}
   </span>
 </div>

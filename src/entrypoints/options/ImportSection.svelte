@@ -6,6 +6,7 @@
   import { addSource, updateSource, removeSource, defaultSourceName, grantOrigin } from '../../lib/sources/manage';
   import { refreshSource } from '../../lib/sources/refresh';
   import { FAILURE_LABEL } from '../../lib/sources/sources';
+  import { t } from '../../lib/i18n.svelte';
   import type { RemoteSource } from '../../lib/types';
 
   let {
@@ -31,9 +32,9 @@
       const res = await importManualRules(text);
       summary = res;
       if (res.limitHit) {
-        onToast('手动规则已达上限 1000，请清理或改用远程源');
+        onToast(t('import.toastLimit'));
       } else if (res.added > 0) {
-        onToast(`新增 ${res.added} 条`);
+        onToast(t('import.toastAdded', { count: res.added }));
       }
       text = '';
       onChanged();
@@ -64,14 +65,14 @@
   let refreshingId = $state<string | null>(null);
 
   function fmtTime(ms: number | null): string {
-    if (!ms) return '从未成功';
+    if (!ms) return t('time.never');
     const diff = Date.now() - ms;
     const min = Math.floor(diff / 60_000);
-    if (min < 1) return '刚刚';
-    if (min < 60) return `${min} 分钟前`;
+    if (min < 1) return t('time.justNow');
+    if (min < 60) return t('time.minutesAgo', { n: min });
     const h = Math.floor(min / 60);
-    if (h < 24) return `${h} 小时前`;
-    return `${Math.floor(h / 24)} 天前`;
+    if (h < 24) return t('time.hoursAgo', { n: h });
+    return t('time.daysAgo', { n: Math.floor(h / 24) });
   }
 
   function statusDot(s: RemoteSource): string {
@@ -81,16 +82,26 @@
     return 'ok';
   }
 
+  /** 错误标签/明细均可能是错误 key 或原始串：t() 对 key 翻译、对原始串恒等透出。 */
+  function failText(detail: string | undefined): string {
+    return detail ? ` — ${t(detail)}` : '';
+  }
+
   async function refresh(id: string) {
     if (refreshingId) return;
     refreshingId = id;
     try {
       const res = await refreshSource(id, { isAuto: false });
       if (res.outcome?.ok) {
-        onToast('刷新成功');
+        onToast(t('import.toastRefreshOk'));
       } else if (res.outcome) {
         const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
-        onToast(`刷新失败（${label}${res.outcome.detail ? `：${res.outcome.detail}` : ''}）`);
+        onToast(
+          t('import.toastRefreshFail', {
+            label: t(label),
+            detail: t(res.outcome.detail ?? ''),
+          }),
+        );
       }
       onChanged();
     } finally {
@@ -103,17 +114,22 @@
     if (refreshingId) return;
     const granted = await grantOrigin(s.url); // 必须是点击处理器里第一个异步调用
     if (!granted) {
-      onToast('授权被拒绝，无法访问该来源');
+      onToast(t('import.toastGrantDenied'));
       return;
     }
-    onToast('已授权，正在重试…');
+    onToast(t('import.toastGranted'));
     refreshingId = s.id;
     try {
       const res = await refreshSource(s.id, { isAuto: false });
-      if (res.outcome?.ok) onToast('刷新成功');
+      if (res.outcome?.ok) onToast(t('import.toastRefreshOk'));
       else if (res.outcome) {
         const label = FAILURE_LABEL[res.outcome.kind as keyof typeof FAILURE_LABEL];
-        onToast(`刷新失败（${label}${res.outcome.detail ? `：${res.outcome.detail}` : ''}）`);
+        onToast(
+          t('import.toastRefreshFail', {
+            label: t(label),
+            detail: t(res.outcome.detail ?? ''),
+          }),
+        );
       }
       onChanged();
     } finally {
@@ -133,7 +149,7 @@
   }
 
   async function remove(id: string, name: string) {
-    if (!confirm(`删除远程源「${name}」？其本地缓存的规则也会一并移除。`)) return;
+    if (!confirm(t('common.confirmRemoveSource', { name }))) return;
     await removeSource(id);
     onChanged();
   }
@@ -144,9 +160,9 @@
     try {
       const res = await addSource(newUrl.trim(), newName.trim() || defaultSourceName(newUrl.trim()));
       if (!res.ok) {
-        onToast(res.error ?? '添加失败');
+        onToast(t(res.error ?? 'import.toastAddFail'));
       } else {
-        onToast(res.outcome?.ok ? '已添加并拉取成功' : `已添加（首拉失败：${res.outcome?.detail ?? ''}）`);
+        onToast(res.outcome?.ok ? t('import.toastAddOk') : t('import.toastAddFirstFail', { detail: t(res.outcome?.detail ?? '') }));
         newName = '';
         newUrl = '';
         showAdd = false;
@@ -158,48 +174,48 @@
   }
 </script>
 
-<div class="sec-title">添加规则</div>
+<div class="sec-title">{t('import.title')}</div>
 
-<p class="muted" style="font-size:12px">手动输入或从文件批量添加；或从远程 URL 拉取清单</p>
+<p class="muted" style="font-size:12px">{t('import.hint')}</p>
 <textarea
   rows="3"
-  placeholder="粘贴：每行一条规则（支持注释 #、通配符 *. +. .、IP、端口、精确 URL）"
+  placeholder={t('import.pastePlaceholder')}
   value={text}
   oninput={(e) => (text = e.currentTarget.value)}
 ></textarea>
 <div class="import-actions">
-  <button class="btn primary" onclick={doImport} disabled={busy || !text.trim()}>添加</button>
-  <button class="btn" onclick={pickFile} disabled={busy}>本地文件</button>
+  <button class="btn primary" onclick={doImport} disabled={busy || !text.trim()}>{t('import.add')}</button>
+  <button class="btn" onclick={pickFile} disabled={busy}>{t('import.localFile')}</button>
 </div>
 
 {#if summary}
   <div class="import-summary">
     {#if summary.limitHit}
-      <span class="badge danger">超出手动上限，未新增</span>
+      <span class="badge danger">{t('import.summaryLimit')}</span>
     {:else}
-      <span class="badge ok">新增 {summary.added}</span>
-      <span class="badge">重复 {summary.duplicate}</span>
+      <span class="badge ok">{t('import.added', { count: summary.added })}</span>
+      <span class="badge">{t('import.duplicate', { count: summary.duplicate })}</span>
     {/if}
     {#if summary.invalid > 0}
       <span class="badge danger">
-        无效 {summary.invalid}
-        <button class="btn-link" onclick={() => (showDetail = !showDetail)}>{showDetail ? '收起' : '明细'}</button>
+        {t('import.invalid', { count: summary.invalid })}
+        <button class="btn-link" onclick={() => (showDetail = !showDetail)}>{showDetail ? t('import.collapse') : t('import.detail')}</button>
       </span>
     {/if}
-    <span class="muted">手动规则 {summary.total}/1000</span>
+    <span class="muted">{t('import.manualTotal', { total: summary.total })}</span>
   </div>
   {#if showDetail && summary.invalidDetail.length}
     <div class="invalid-detail">
       {#each summary.invalidDetail as d}
-        <div class="row"><span class="reason">{d.reason}</span><span class="line">{d.line}</span></div>
+        <div class="row"><span class="reason">{t(d.reason)}</span><span class="line">{d.line}</span></div>
       {/each}
     </div>
   {/if}
 {/if}
 
 <div class="sec-title sub">
-  远程源
-  <span class="muted" style="font-size:12px;font-weight:400">内容仅存本机，不随账号同步；手动刷新或按间隔自动刷新</span>
+  {t('import.remoteTitle')}
+  <span class="muted" style="font-size:12px;font-weight:400">{t('import.remoteHint')}</span>
 </div>
 
 {#each sources as s (s.id)}
@@ -209,32 +225,32 @@
       <div class="source-name">
         {s.name}
         {#if !s.enabled}
-          <span class="badge off">已停用</span>
+          <span class="badge off">{t('import.disabled')}</span>
         {/if}
         {#if s.disabledByFailures}
-          <span class="badge danger">连续失败</span>
+          <span class="badge danger">{t('import.failedRepeatedly')}</span>
         {/if}
       </div>
       <div class="source-meta">
-        {s.ruleCount} 条 · 上次成功 {fmtTime(s.lastSuccessAt)}
-        {#if s.refreshHours}<span>· 每 {s.refreshHours}h 自动刷新</span>{/if}
+        {t('import.metaLine', { count: s.ruleCount, time: fmtTime(s.lastSuccessAt) })}
+        {#if s.refreshHours}<span>{t('import.autoRefresh', { hours: s.refreshHours })}</span>{/if}
       </div>
       <div class="source-meta">{s.url}</div>
       {#if s.lastError}
-        <div class="source-err">{FAILURE_LABEL[s.lastError.kind]}{s.lastError.detail ? `：${s.lastError.detail}` : ''}</div>
+        <div class="source-err">{t(FAILURE_LABEL[s.lastError.kind])}{failText(s.lastError.detail)}</div>
       {/if}
     </div>
     <div class="source-ops">
       <label class="muted" style="font-size:12px">
         <input type="checkbox" checked={s.enabled} onchange={(e) => toggle(s.id, e.currentTarget.checked)} />
-        启用
+        {t('common.enable')}
       </label>
       <select
-        aria-label="自动刷新间隔"
+        aria-label={t('import.intervalAria')}
         value={s.refreshHours ?? ''}
         onchange={(e) => changeInterval(s.id, e.currentTarget.value)}
       >
-        <option value="">手动</option>
+        <option value="">{t('common.manual')}</option>
         <option value="1">1h</option>
         <option value="6">6h</option>
         <option value="12">12h</option>
@@ -242,34 +258,34 @@
       </select>
       {#if s.lastError?.kind === 'network'}
         <button class="btn small" onclick={() => grantAndRefresh(s)} disabled={refreshingId !== null}>
-          授权并重试
+          {t('import.grantRetry')}
         </button>
       {/if}
       <button class="btn small" onclick={() => refresh(s.id)} disabled={refreshingId !== null}>
-        {refreshingId === s.id ? '刷新中…' : '刷新'}
+        {refreshingId === s.id ? t('import.refreshing') : t('common.refresh')}
       </button>
-      <button class="btn small danger" onclick={() => remove(s.id, s.name)}>删除</button>
+      <button class="btn small danger" onclick={() => remove(s.id, s.name)}>{t('common.delete')}</button>
     </div>
   </div>
 {/each}
 
 {#if sources.length === 0}
-  <div class="muted" style="text-align:center;padding:12px">尚未添加远程源</div>
+  <div class="muted" style="text-align:center;padding:12px">{t('import.noSources')}</div>
 {/if}
 
 {#if showAdd}
   <div class="add-source">
-    <input type="text" placeholder="名称（默认取主机名）" value={newName} oninput={(e) => (newName = e.currentTarget.value)} />
+    <input type="text" placeholder={t('import.namePlaceholder')} value={newName} oninput={(e) => (newName = e.currentTarget.value)} />
     <input
       type="url"
-      placeholder="https://…（每行一条的纯文本清单）"
+      placeholder={t('import.urlPlaceholder')}
       value={newUrl}
       oninput={(e) => (newUrl = e.currentTarget.value)}
       onkeydown={(e) => e.key === 'Enter' && doAdd()}
     />
-    <button class="btn primary" onclick={doAdd} disabled={adding || !newUrl.trim()}>添加并拉取</button>
-    <button class="btn" onclick={() => (showAdd = false)}>取消</button>
+    <button class="btn primary" onclick={doAdd} disabled={adding || !newUrl.trim()}>{t('import.addAndFetch')}</button>
+    <button class="btn" onclick={() => (showAdd = false)}>{t('common.cancel')}</button>
   </div>
 {:else}
-  <button class="btn" onclick={() => (showAdd = true)}>+ 添加远程源</button>
+  <button class="btn" onclick={() => (showAdd = true)}>{t('import.addSource')}</button>
 {/if}

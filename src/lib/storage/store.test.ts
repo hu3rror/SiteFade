@@ -78,16 +78,28 @@ describe('sources（sync）', () => {
 });
 
 describe('settings（sync）', () => {
-  it('合法 pageSize 往返一致', async () => {
-    await saveSettings({ pageSize: 50 });
-    expect(await loadSettings()).toEqual({ pageSize: 50 });
+  it('合法 pageSize 往返一致（含主题/语言可选字段）', async () => {
+    await saveSettings({ pageSize: 50, theme: 'dark', language: 'en' });
+    expect(await loadSettings()).toEqual({ pageSize: 50, theme: 'dark', language: 'en' });
   });
 
   it('非法 / 缺省 pageSize → 默认值', async () => {
     await browser.storage.sync.set({ settings: { version: 1, pageSize: 5000 } });
-    expect(await loadSettings()).toEqual({ pageSize: 10 });
+    expect(await loadSettings()).toEqual({ pageSize: 10, theme: 'system', language: null });
     await browser.storage.sync.clear();
-    expect(await loadSettings()).toEqual({ pageSize: 10 });
+    expect(await loadSettings()).toEqual({ pageSize: 10, theme: 'system', language: null });
+  });
+
+  it('theme / language 非法值与缺省 → 兜底默认', async () => {
+    // 旧格式 blob（仅 pageSize）：新字段取默认
+    await browser.storage.sync.set({ settings: { version: 1, pageSize: 20 } });
+    expect(await loadSettings()).toEqual({ pageSize: 20, theme: 'system', language: null });
+    // 非法值兜底
+    await browser.storage.sync.set({ settings: { version: 1, pageSize: 20, theme: 'sepia', language: 'fr' } });
+    expect(await loadSettings()).toEqual({ pageSize: 20, theme: 'system', language: null });
+    // 合法值保留；language 存 null 时省略 key，读回仍为 null（跟随浏览器）
+    await saveSettings({ pageSize: 20, theme: 'light', language: null });
+    expect(await loadSettings()).toEqual({ pageSize: 20, theme: 'light', language: null });
   });
 });
 

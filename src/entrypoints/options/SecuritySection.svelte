@@ -5,6 +5,7 @@
   import { isValidPin, hashPin, createPinLock } from '../../lib/pin/pin';
   import { loadPinData, savePinData } from '../../lib/storage/store';
   import { MAX_PIN_ATTEMPTS, PIN_LOCK_MS } from '../../lib/constants';
+  import { t } from '../../lib/i18n.svelte';
   import PinPad from './PinPad.svelte';
 
   let {
@@ -48,7 +49,7 @@
   // 设置新 PIN：阶段 1（输入）→ 阶段 2（确认）
   function onSet(pin: string) {
     if (!isValidPin(pin)) {
-      error = 'PIN 需为 4 位数字';
+      error = t('security.pinFormat');
       return;
     }
     pendingPin = pin;
@@ -57,11 +58,11 @@
   }
   async function onConfirm(pin: string) {
     if (pin !== pendingPin) {
-      error = '两次输入不一致，请重新设置';
+      error = t('security.mismatch');
       mode = 'set';
       return;
     }
-    await persist(await hashPin(pin), '已启用 PIN 锁');
+    await persist(await hashPin(pin), t('security.toastEnabled'));
   }
 
   // 验证当前 PIN（修改 / 关闭前置）
@@ -73,7 +74,7 @@
     if (res === 'ok') {
       error = '';
       if (pendingAction === 'disable') {
-        await persist(null, '已关闭 PIN 锁');
+        await persist(null, t('security.toastDisabled'));
       } else {
         pendingPin = '';
         mode = 'change';
@@ -81,16 +82,16 @@
       return;
     }
     if (res === 'locked') {
-      error = `输错次数过多，请 ${Math.ceil(lock.remainingMs() / 1000)} 秒后再试`;
+      error = t('security.tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
     } else {
-      error = '当前 PIN 不正确';
+      error = t('security.wrongPin');
     }
   }
 
   // 修改 PIN：阶段 1 → 阶段 2
   function onChange(pin: string) {
     if (!isValidPin(pin)) {
-      error = '新 PIN 需为 4 位数字';
+      error = t('security.newPinFormat');
       return;
     }
     pendingPin = pin;
@@ -99,11 +100,11 @@
   }
   async function onConfirmChange(pin: string) {
     if (pin !== pendingPin) {
-      error = '两次输入不一致，请重新设置';
+      error = t('security.mismatch');
       mode = 'change';
       return;
     }
-    await persist(await hashPin(pin), 'PIN 已修改');
+    await persist(await hashPin(pin), t('security.toastChanged'));
   }
 
   function handlerFor(m: Mode) {
@@ -118,32 +119,31 @@
   }
 
   const padTitle = $derived(
-    mode === 'verify' ? '验证当前 PIN'
-    : mode === 'set' || mode === 'change' ? '设置新 PIN'
-    : '确认 PIN',
+    mode === 'verify' ? t('security.titleVerify')
+    : mode === 'set' || mode === 'change' ? t('security.titleSet')
+    : t('security.titleConfirm'),
   );
   const padHint = $derived(
-    mode === 'verify' ? '修改或关闭前需要验证'
-    : mode === 'set' || mode === 'change' ? '4 位数字'
-    : '再次输入以确认',
+    mode === 'verify' ? t('security.hintVerify')
+    : mode === 'set' || mode === 'change' ? t('security.hintDigits')
+    : t('security.hintConfirm'),
   );
 </script>
 
-<div class="sec-title">设置锁</div>
+<div class="sec-title">{t('security.title')}</div>
 <p class="muted" style="font-size:12px">
-  可选 PIN 保护（4 位数字）。仅存本机 SHA-256 哈希，不存明文、不联网、不同步。
-  只锁设置页，工具栏 popup 不受影响。
+  {t('security.hint')}
 </p>
 
 {#if mode === 'idle'}
   <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
     {#if pinEnabled}
-      <span class="badge ok">PIN 锁已启用</span>
-      <button class="btn small" onclick={() => { pendingAction = 'change'; error = ''; mode = 'verify'; }}>修改</button>
-      <button class="btn small danger" onclick={() => { pendingAction = 'disable'; error = ''; mode = 'verify'; }}>关闭</button>
+      <span class="badge ok">{t('security.enabled')}</span>
+      <button class="btn small" onclick={() => { pendingAction = 'change'; error = ''; mode = 'verify'; }}>{t('security.change')}</button>
+      <button class="btn small danger" onclick={() => { pendingAction = 'disable'; error = ''; mode = 'verify'; }}>{t('security.disable')}</button>
     {:else}
-      <button class="btn" onclick={() => { pendingAction = null; error = ''; mode = 'set'; }}>设置 PIN 锁</button>
-      <span class="muted" style="font-size:12px">当前未启用</span>
+      <button class="btn" onclick={() => { pendingAction = null; error = ''; mode = 'set'; }}>{t('security.enable')}</button>
+      <span class="muted" style="font-size:12px">{t('security.notEnabled')}</span>
     {/if}
   </div>
 {:else}
@@ -156,6 +156,6 @@
       onComplete={handlerFor(mode) ?? (() => {})}
       onCancel={reset}
     />
-    <div class="pin-note">忘记 PIN？从设置页底部的「重置设置」清除（将同时清空本机缓存与远程源）。</div>
+    <div class="pin-note">{t('security.forgotHint')}</div>
   </div>
 {/if}

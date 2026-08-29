@@ -28,7 +28,7 @@ export function defaultSourceName(url: string): string {
   try {
     return new URL(url).hostname;
   } catch {
-    return '远程源';
+    return '';
   }
 }
 
@@ -69,14 +69,14 @@ export async function addSource(
   try {
     u = new URL(url);
   } catch {
-    return { ok: false, source: null, outcome: null, error: 'URL 无法解析' };
+    return { ok: false, source: null, outcome: null, error: 'error.invalidUrl' };
   }
   if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-    return { ok: false, source: null, outcome: null, error: '仅支持 http/https 远程源' };
+    return { ok: false, source: null, outcome: null, error: 'error.httpOnly' };
   }
   const existing = await loadSources();
   if (existing.some((s) => s.url === url)) {
-    return { ok: false, source: null, outcome: null, error: '该 URL 已在源列表中' };
+    return { ok: false, source: null, outcome: null, error: 'error.urlExists' };
   }
 
   const src: RemoteSource = {

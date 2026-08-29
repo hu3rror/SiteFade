@@ -40,10 +40,20 @@ export interface RemoteSource {
   lastError: SourceError | null;
 }
 
+/** 主题偏好取值（随账号同步；跟随系统时以系统外观为信号源）。 */
+export type ThemePref = 'system' | 'light' | 'dark';
+
+/** 支持的界面语言（随账号同步；null = 跟随浏览器语言）。 */
+export type UiLang = 'zh_CN' | 'en';
+
 /** 设置（随账号同步；PIN 哈希单独存本机，不在此）。 */
 export interface Settings {
   /** 规则清单每页条数。 */
   pageSize: number;
+  /** 主题偏好。 */
+  theme: ThemePref;
+  /** 界面语言偏好，null = 跟随浏览器语言。 */
+  language: UiLang | null;
 }
 
 /** 本机 PIN 锁数据（只存哈希，不存明文、不同步；固定 4 位）。 */
@@ -71,8 +81,8 @@ export interface StatusSnapshot {
   /** 当前 URL 是否命中清单规则。 */
   matched: boolean;
   match: MatchResult | null;
-  /** 命中规则的展示标签（如“手动”/“远程「xxx」”）。 */
-  matchLabel?: string;
+  /** 命中远程源时其名称（供 UI 拼装来源标签；手动命中无此项）。 */
+  sourceName?: string;
   /** 规则总条数（手动 + 各远程源去重后）。 */
   totalRules: number;
   manualCount: number;

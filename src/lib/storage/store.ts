@@ -10,7 +10,8 @@
 
 import { browser } from 'wxt/browser';
 import { DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE, MAX_PAGE_SIZE, MAX_RULE_LENGTH } from '../constants';
-import type { ManualRule, RemoteSource, Settings, PinData, RemoteCache } from '../types';
+import { isSupportedLang } from '../i18n';
+import type { ManualRule, RemoteSource, Settings, PinData, RemoteCache, ThemePref, UiLang } from '../types';
 
 const VERSION = 1;
 
@@ -119,18 +120,33 @@ export async function saveSources(sources: RemoteSource[]): Promise<boolean> {
 
 /* ---------- settings（sync） ---------- */
 
+const THEME_PREFS: ThemePref[] = ['system', 'light', 'dark'];
+
+/** 解码：theme/language 为可选字段（票 11，VERSION=1 保持 + 缺省兜底），非法值回退默认。 */
 function decodeSettings(blob: Blob): Settings | undefined {
   const n = Number(blob.pageSize);
   if (!Number.isInteger(n) || n < MIN_PAGE_SIZE || n > MAX_PAGE_SIZE) return undefined;
-  return { pageSize: n };
+  const theme: ThemePref = THEME_PREFS.includes(blob.theme as ThemePref) ? (blob.theme as ThemePref) : 'system';
+  const language: UiLang | null = isSupportedLang(blob.language) ? blob.language : null;
+  return { pageSize: n, theme, language };
 }
 
 export async function loadSettings(): Promise<Settings> {
-  return (await readBlob('sync', SYNC_KEYS.settings, decodeSettings)) ?? { pageSize: DEFAULT_PAGE_SIZE };
+  return (
+    (await readBlob('sync', SYNC_KEYS.settings, decodeSettings)) ?? {
+      pageSize: DEFAULT_PAGE_SIZE,
+      theme: 'system',
+      language: null,
+    }
+  );
 }
 
 export async function saveSettings(settings: Settings): Promise<boolean> {
-  return writeBlob('sync', SYNC_KEYS.settings, { pageSize: settings.pageSize });
+  return writeBlob('sync', SYNC_KEYS.settings, {
+    pageSize: settings.pageSize,
+    theme: settings.theme,
+    ...(settings.language ? { language: settings.language } : {}),
+  });
 }
 
 /* ---------- pin（local，仅本机，只存哈希） ---------- */

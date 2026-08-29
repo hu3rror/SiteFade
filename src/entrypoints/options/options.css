@@ -20,7 +20,7 @@
   height: 30px;
   border-radius: 9px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   display: grid;
   place-items: center;
   font-weight: 700;
@@ -344,7 +344,37 @@ input[type='password'].pinpad-input {
   padding: 8px 12px;
 }
 
-/* ---- 底部重置条 ---- */.reset-bar {
+/* ---- 外观（主题切换） ---- */
+.appearance-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.appearance-label {
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 56px;
+}
+.theme-switch {
+  display: flex;
+  gap: 6px;
+}
+.theme-switch .btn.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.appearance-row select.lang-select {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* ---- 底部重置条 ---- */
+.reset-bar {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -396,8 +426,8 @@ input[type='password'].pinpad-input {
   left: 50%;
   bottom: 28px;
   transform: translateX(-50%);
-  background: #1a1d21;
-  color: #fff;
+  background: var(--toast-bg);
+  color: var(--toast-fg);
   padding: 8px 16px;
   border-radius: 999px;
   font-size: 13px;

@@ -2,6 +2,7 @@
   // PIN 输入面板（固定 4 位，票 09 交互修订）：4 个圆点 + 数字键盘，填满自动提交。
   // 内容永不显示明文：隐藏 password 框（键盘输入）+ 圆点渲染。
   import { onMount } from 'svelte';
+  import { t } from '../../lib/i18n.svelte';
 
   let {
     title,
@@ -83,24 +84,24 @@
     onkeydown={(e) => e.key === 'Enter' && submit()}
     disabled={disabled}
     autocomplete="off"
-    aria-label="PIN 输入"
+    aria-label={t('pinpad.inputAria')}
   />
 
   {#if error || disabled}
-    <div class="pinpad-err">{error || (disabled ? '暂时不可输入' : '')}</div>
+    <div class="pinpad-err">{error || (disabled ? t('pinpad.disabled') : '')}</div>
   {/if}
 
   <div class="pinpad-keypad">
     {#each keys as k (k)}
       <button class="pinpad-key" onclick={() => press(k)} disabled={disabled}>{k}</button>
     {/each}
-    <button class="pinpad-key ghost" onclick={clear} disabled={disabled} title="清除">清除</button>
+    <button class="pinpad-key ghost" onclick={clear} disabled={disabled} title={t('pinpad.clear')}>{t('pinpad.clear')}</button>
     <button class="pinpad-key" onclick={() => press('0')} disabled={disabled}>0</button>
-    <button class="pinpad-key ghost" onclick={backspace} disabled={disabled} aria-label="退格">⌫</button>
+    <button class="pinpad-key ghost" onclick={backspace} disabled={disabled} aria-label={t('pinpad.backspace')}>⌫</button>
   </div>
 
   <div class="pinpad-actions">
-    <button class="btn" onclick={() => onCancel?.()} disabled={disabled}>取消</button>
-    <span class="muted" style="font-size:12px;align-self:center">填满 4 位自动完成</span>
+    <button class="btn" onclick={() => onCancel?.()} disabled={disabled}>{t('common.cancel')}</button>
+    <span class="muted" style="font-size:12px;align-self:center">{t('pinpad.fillHint')}</span>
   </div>
 </div>

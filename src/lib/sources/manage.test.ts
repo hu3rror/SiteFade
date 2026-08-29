@@ -24,7 +24,7 @@ describe('addSource', () => {
   it('URL 无法解析 → 失败，不建源', async () => {
     const res = await addSource('not a url');
     expect(res.ok).toBe(false);
-    expect(res.error).toContain('URL');
+    expect(res.error).toContain('invalidUrl');
     expect(await loadSources()).toEqual([]);
   });
 
@@ -38,7 +38,7 @@ describe('addSource', () => {
     await addSource('https://example.com/list.txt', 'x');
     const res = await addSource('https://example.com/list.txt', 'y');
     expect(res.ok).toBe(false);
-    expect(res.error).toContain('已在源列表');
+    expect(res.error).toContain('urlExists');
     expect(await loadSources()).toHaveLength(1);
   });
 
@@ -89,6 +89,6 @@ describe('originPermissionPattern（授权 seam，属管理模块）', () => {
 describe('defaultSourceName', () => {
   it('URL 主机名 / 兜底', () => {
     expect(defaultSourceName('https://a.b.com/x')).toBe('a.b.com');
-    expect(defaultSourceName('nope')).toBe('远程源');
+    expect(defaultSourceName('nope')).toBe('');
   });
 });

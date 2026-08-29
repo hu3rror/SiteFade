@@ -5,6 +5,7 @@
   import { createPinLock } from '../../lib/pin/pin';
   import { resetSettings } from '../../lib/reset';
   import { MAX_PIN_ATTEMPTS, PIN_LOCK_MS } from '../../lib/constants';
+  import { t } from '../../lib/i18n.svelte';
   import PinPad from './PinPad.svelte';
 
   let { onUnlock }: { onUnlock: () => void } = $props();
@@ -36,14 +37,14 @@
       return;
     }
     if (res === 'locked') {
-      error = `输错次数过多，请 ${Math.ceil(lock.remainingMs() / 1000)} 秒后再试`;
+      error = t('security.tooManyTries', { seconds: Math.ceil(lock.remainingMs() / 1000) });
     } else {
-      error = 'PIN 不正确，请重试';
+      error = t('pingate.wrongPin');
     }
   }
 
   async function doReset() {
-    if (resetting || !confirm('重置设置将清除 PIN、本机缓存与全部远程源（手动规则保留）。确定继续？')) return;
+    if (resetting || !confirm(t('options.resetConfirm'))) return;
     resetting = true;
     try {
       await resetSettings();
@@ -57,19 +58,19 @@
 <div class="lock-screen">
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
-    <h2>设置页已锁定</h2>
+    <h2>{t('pingate.locked')}</h2>
     <PinPad
-      title="输入 PIN"
-      hint="4 位数字"
+      title={t('pingate.enterPin')}
+      hint={t('security.hintDigits')}
       error={error}
       disabled={lockRemaining > 0}
       onComplete={tryPin}
     />
     <button class="btn danger" onclick={doReset} disabled={resetting} style="margin-top:12px">
-      重置设置
+      {t('options.reset')}
     </button>
     <div class="muted" style="font-size:11px;margin-top:6px">
-      忘记 PIN？重置后需重新添加远程源
+      {t('pingate.forgotHint')}
     </div>
   </div>
 </div>

@@ -24,7 +24,7 @@ export interface PopupResponse {
 export async function sendPopupMessage(msg: PopupMessage): Promise<PopupResponse> {
   try {
     const res = (await browser.runtime.sendMessage(msg)) as PopupResponse | undefined;
-    return res ?? { ok: false, error: '后台无响应' };
+    return res ?? { ok: false, error: 'error.noBackground' };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }

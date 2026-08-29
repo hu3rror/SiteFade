@@ -1,4 +1,6 @@
-/* SiteFade 共享基础样式（原生 CSS + 变量，深色模式留变量口子）。 */
+/* SiteFade 共享基础样式（原生 CSS + 变量）。
+ * 主题（票 11）：浅色为 `:root` 默认；深色取值组按「跟随系统（@media）」或
+ * 「显式 data-theme="dark"」两处选择器应用。所有表面一律走变量，不写死色值。 */
 
 :root {
   --bg: #f4f5f7;
@@ -6,22 +8,96 @@
   --text: #1a1d21;
   --muted: #6b7280;
   --line: #e5e7eb;
+  --line-strong: #cbd5e1;
   --accent: #0f766e;
   --accent-strong: #0b5d57;
   --accent-soft: #ccfbf1;
+  --accent-contrast: #ffffff;
   --danger: #b91c1c;
   --danger-soft: #fee2e2;
+  --danger-line: #fecaca;
   --warn: #b45309;
   --warn-soft: #fef3c7;
   --ok: #166534;
   --ok-soft: #dcfce7;
   --badge-bg: #eef2f7;
+  --th-bg: #fafafa;
   --manual-bg: #ede9fe;
   --manual-fg: #5b21b6;
+  --dot-ok: #16a34a;
+  --dot-warn: #f59e0b;
+  --dot-danger: #dc2626;
+  --dot-off: #cbd5e1;
+  --toast-bg: #1a1d21;
+  --toast-fg: #ffffff;
   --radius: 12px;
   --radius-sm: 8px;
   --shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 8px 24px rgba(16, 24, 40, 0.06);
   --font: -apple-system, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+/* 深色取值组：跟随系统（media 免 JS 监听）+ 显式深色共用同一组值；两处改动需同步。 */
+:root[data-theme='dark'] {
+  --bg: #14161a;
+  --panel: #1c1f26;
+  --text: #e7e9ee;
+  --muted: #9aa3b2;
+  --line: #2b3038;
+  --line-strong: #3a4150;
+  --accent: #2dd4bf;
+  --accent-strong: #5eead4;
+  --accent-soft: #134e4a;
+  --accent-contrast: #04231f;
+  --danger: #f87171;
+  --danger-soft: #3a1a1c;
+  --danger-line: #7f1d1d;
+  --warn: #fbbf24;
+  --warn-soft: #3d2f12;
+  --ok: #4ade80;
+  --ok-soft: #14301e;
+  --badge-bg: #262b33;
+  --th-bg: #20242c;
+  --manual-bg: #2e2a45;
+  --manual-fg: #c4b5fd;
+  --dot-ok: #22c55e;
+  --dot-warn: #fbbf24;
+  --dot-danger: #ef4444;
+  --dot-off: #4b5563;
+  --toast-bg: #e7e9ee;
+  --toast-fg: #14161a;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #14161a;
+    --panel: #1c1f26;
+    --text: #e7e9ee;
+    --muted: #9aa3b2;
+    --line: #2b3038;
+    --line-strong: #3a4150;
+    --accent: #2dd4bf;
+    --accent-strong: #5eead4;
+    --accent-soft: #134e4a;
+    --accent-contrast: #04231f;
+    --danger: #f87171;
+    --danger-soft: #3a1a1c;
+    --danger-line: #7f1d1d;
+    --warn: #fbbf24;
+    --warn-soft: #3d2f12;
+    --ok: #4ade80;
+    --ok-soft: #14301e;
+    --badge-bg: #262b33;
+    --th-bg: #20242c;
+    --manual-bg: #2e2a45;
+    --manual-fg: #c4b5fd;
+    --dot-ok: #22c55e;
+    --dot-warn: #fbbf24;
+    --dot-danger: #ef4444;
+    --dot-off: #4b5563;
+    --toast-bg: #e7e9ee;
+    --toast-fg: #14161a;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
 }
 
 * {
@@ -55,18 +131,18 @@ button {
   transition: background 0.15s, border-color 0.15s;
 }
 .btn:hover {
-  border-color: #cbd5e1;
+  border-color: var(--line-strong);
 }
 .btn.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
 }
 .btn.primary:hover {
   background: var(--accent-strong);
 }
 .btn.danger {
-  border-color: #fecaca;
+  border-color: var(--danger-line);
   color: var(--danger);
 }
 .btn.danger:hover {
@@ -121,16 +197,16 @@ button {
   flex: none;
 }
 .dot.ok {
-  background: #16a34a;
+  background: var(--dot-ok);
 }
 .dot.warn {
-  background: #f59e0b;
+  background: var(--dot-warn);
 }
 .dot.danger {
-  background: #dc2626;
+  background: var(--dot-danger);
 }
 .dot.off {
-  background: #cbd5e1;
+  background: var(--dot-off);
 }
 
 .muted {
@@ -186,7 +262,7 @@ th {
   color: var(--muted);
   font-weight: 500;
   font-size: 12px;
-  background: #fafafa;
+  background: var(--th-bg);
 }
 tr:last-child td {
   border-bottom: none;

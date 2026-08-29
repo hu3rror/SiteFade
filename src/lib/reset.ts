@@ -10,7 +10,7 @@ import { DEFAULT_PAGE_SIZE } from './constants';
 
 export async function resetSettings(): Promise<void> {
   await savePinData({ hash: null });
-  await saveSettings({ pageSize: DEFAULT_PAGE_SIZE });
+  await saveSettings({ pageSize: DEFAULT_PAGE_SIZE, theme: 'system', language: null });
   await saveSources([]);
   await clearRemoteCaches();
 }

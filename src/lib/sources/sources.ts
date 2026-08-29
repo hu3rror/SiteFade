@@ -10,9 +10,9 @@ import { MAX_SOURCE_FAILURES } from '../constants';
 import type { RemoteSource, SourceError, SourceErrorKind } from '../types';
 
 export const FAILURE_LABEL: Record<SourceErrorKind, string> = {
-  network: '网络错误',
-  http: 'HTTP 错误',
-  parse: '解析失败',
+  network: 'source.kind.network',
+  http: 'source.kind.http',
+  parse: 'source.kind.parse',
 };
 
 /** 应用一次拉取结果到源状态。isAuto 控制失败计数是否累加。 */

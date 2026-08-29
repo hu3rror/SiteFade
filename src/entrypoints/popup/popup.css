@@ -8,7 +8,7 @@
 
 .banner {
   background: var(--warn-soft);
-  border-bottom: 1px solid #fde68a;
+  border-bottom: 1px solid var(--line);
   color: var(--warn);
   font-size: 12px;
   padding: 8px 12px;
@@ -79,7 +79,7 @@
   align-items: center;
   padding: 10px 14px;
   border-top: 1px solid var(--line);
-  background: #fafafa;
+  background: var(--th-bg);
 }
 .foot-actions {
   display: flex;

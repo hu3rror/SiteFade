@@ -8,7 +8,9 @@ export default defineConfig({
   manifest: ({ browser: target }) => {
     const base = {
       name: 'SiteFade',
-      description: '访问清单内站点后立即从浏览历史中删除其访问记录。',
+      // i18n（票 11）：description 走 _locales 消息占位符；name 为专有名词保持固定。
+      description: '__MSG_extDescription__',
+      default_locale: 'zh_CN',
       permissions: ['history', 'storage', 'alarms', 'activeTab'],
       // 远程源按源运行时授权（票 04）：声明覆盖 pattern，运行时只请求具体 origin。
       // 不产生安装警告；Firefox 128+ 亦支持 optional_host_permissions。

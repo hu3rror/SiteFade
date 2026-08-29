@@ -5,6 +5,7 @@
   import { loadManualRules, saveManualRules } from '../../lib/storage/store';
   import { genId } from '../../lib/id';
   import { MANUAL_LIMIT } from '../../lib/constants';
+  import { t } from '../../lib/i18n.svelte';
   import type { RuleRow } from '../../lib/types';
 
   let {
@@ -41,9 +42,9 @@
   }
 
   function sourceLabel(row: RuleRow): string {
-    if (row.sourceRef === 'manual') return '手动';
+    if (row.sourceRef === 'manual') return t('common.manual');
     const id = row.sourceRef.slice('remote:'.length);
-    return sourceNames[id] ? `远程「${sourceNames[id]}」` : '远程';
+    return sourceNames[id] ? t('common.sourceRemote', { name: sourceNames[id] }) : t('common.remote');
   }
 
   async function removeManual(text: string) {
@@ -54,21 +55,21 @@
 
   async function saveEdit(oldText: string, newText: string) {
     editing = null;
-    const t = newText.trim();
-    if (!t || t === oldText) return;
-    const p = parseLine(t);
+    const t2 = newText.trim();
+    if (!t2 || t2 === oldText) return;
+    const p = parseLine(t2);
     if (!p || 'error' in p) {
-      onToast('规则无效，未修改');
+      onToast(t('rules.toastInvalid'));
       return;
     }
     const rules = await loadManualRules();
     const others = rules.filter((r) => r.text !== oldText);
     if (others.some((r) => r.text === p.text)) {
-      onToast('该规则已存在');
+      onToast(t('rules.toastExists'));
       return;
     }
     if (others.length >= MANUAL_LIMIT) {
-      onToast(`手动规则已达上限 ${MANUAL_LIMIT}`);
+      onToast(t('rules.toastLimit', { limit: MANUAL_LIMIT }));
       return;
     }
     await saveManualRules([...others, { id: genId(), text: p.text }]);
@@ -85,38 +86,38 @@
 </script>
 
 <div class="sec-title">
-  规则清单
-  <span class="muted" style="font-size:12px;font-weight:400">共 {filtered.length.toLocaleString()} 条 · 手动 {manualCount}/{MANUAL_LIMIT}</span>
+  {t('rules.title')}
+  <span class="muted" style="font-size:12px;font-weight:400">{t('rules.meta', { count: filtered.length.toLocaleString(), manual: manualCount, limit: MANUAL_LIMIT })}</span>
 </div>
 
 <div class="rules-toolbar">
   <input
     class="search"
     type="text"
-    placeholder="搜索规则…"
+    placeholder={t('rules.search')}
     value={query}
     oninput={(e) => { query = e.currentTarget.value; page = 1; }}
   />
   <select
     class="pagesize"
-    aria-label="每页条数"
+    aria-label={t('rules.perPageAria')}
     value={pageSize}
     onchange={(e) => onPageSizeChange(Number(e.currentTarget.value))}
   >
     {#each [10, 25, 50, 100, 200] as n}
-      <option value={n} selected={pageSize === n}>{n} 条/页</option>
+      <option value={n} selected={pageSize === n}>{t('rules.perPage', { n })}</option>
     {/each}
   </select>
 </div>
 
 <table>
   <thead>
-    <tr><th style="width:70px">来源</th><th>规则</th><th style="width:120px"></th></tr>
+    <tr><th style="width:70px">{t('rules.colSource')}</th><th>{t('rules.colRule')}</th><th style="width:120px"></th></tr>
   </thead>
   <tbody>
     {#each pageRows as row, i (row.text)}
       <tr>
-        <td><span class="badge {row.sourceRef === 'manual' ? 'manual' : 'remote'}">{row.sourceRef === 'manual' ? '手动' : '远程'}</span></td>
+        <td><span class="badge {row.sourceRef === 'manual' ? 'manual' : 'remote'}">{row.sourceRef === 'manual' ? t('common.manual') : t('common.remote')}</span></td>
         <td>
           {#if editing === row.text && row.sourceRef === 'manual'}
             <div style="display:flex;gap:6px">
@@ -125,8 +126,8 @@
                 oninput={(e) => (editText = e.currentTarget.value)}
                 onkeydown={(e) => e.key === 'Enter' && saveEdit(row.text, editText)}
               />
-              <button class="btn small primary" onclick={() => saveEdit(row.text, editText)}>保存</button>
-              <button class="btn small" onclick={() => (editing = null)}>取消</button>
+              <button class="btn small primary" onclick={() => saveEdit(row.text, editText)}>{t('common.save')}</button>
+              <button class="btn small" onclick={() => (editing = null)}>{t('common.cancel')}</button>
             </div>
           {:else}
             <span class="rule-text">{row.text}</span>
@@ -135,8 +136,8 @@
         <td>
           {#if row.sourceRef === 'manual'}
             <div class="row-actions">
-              <button class="btn small" onclick={() => startEdit(row.text)}>编辑</button>
-              <button class="btn small danger" onclick={() => removeManual(row.text)}>删除</button>
+              <button class="btn small" onclick={() => startEdit(row.text)}>{t('common.edit')}</button>
+              <button class="btn small danger" onclick={() => removeManual(row.text)}>{t('common.delete')}</button>
             </div>
           {:else}
             <span class="muted" style="font-size:11px">{sourceLabel(row)}</span>
@@ -148,11 +149,11 @@
 </table>
 
 {#if filtered.length === 0}
-  <div class="muted" style="text-align:center;padding:14px">没有匹配的规则</div>
+  <div class="muted" style="text-align:center;padding:14px">{t('rules.noMatch')}</div>
 {/if}
 
 <div class="pager">
-  <button class="btn small" onclick={() => setPage(curPage - 1)} disabled={curPage <= 1}>上一页</button>
-  <span class="info">第 {curPage} / {totalPages} 页</span>
-  <button class="btn small" onclick={() => setPage(curPage + 1)} disabled={curPage >= totalPages}>下一页</button>
+  <button class="btn small" onclick={() => setPage(curPage - 1)} disabled={curPage <= 1}>{t('rules.prev')}</button>
+  <span class="info">{t('rules.pageInfo', { cur: curPage, total: totalPages })}</span>
+  <button class="btn small" onclick={() => setPage(curPage + 1)} disabled={curPage >= totalPages}>{t('rules.next')}</button>
 </div>
