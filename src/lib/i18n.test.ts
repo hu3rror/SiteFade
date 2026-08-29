@@ -3,7 +3,7 @@
  * 纯 TS 无浏览器依赖；运行时加载层（fetch）不在本套件内。
  */
 import { describe, it, expect } from 'vitest';
-import { createT, resolveLang, isSupportedLang, extractCatalog, DEFAULT_LANG, type MessageCatalog } from './i18n';
+import { createT, resolveLang, isSupportedLang, extractCatalog, htmlLangFor, DEFAULT_LANG, type MessageCatalog } from './i18n';
 
 const zh: MessageCatalog = { hello: '你好', greet: '你好，{name}！', count: '共 {n} 条', onlyZh: '只在中文' };
 const en: MessageCatalog = { hello: 'Hello', greet: 'Hello, {name}!', count: '{n} total' };
@@ -62,6 +62,16 @@ describe('resolveLang', () => {
 
   it('基线默认语言为中文', () => {
     expect(DEFAULT_LANG).toBe('zh_CN');
+  });
+});
+
+describe('htmlLangFor', () => {
+  it('zh_CN → zh-CN（BCP-47 标签）', () => {
+    expect(htmlLangFor('zh_CN')).toBe('zh-CN');
+  });
+
+  it('en → en', () => {
+    expect(htmlLangFor('en')).toBe('en');
   });
 });
 

@@ -4,7 +4,8 @@
   import { collectOverview } from '../../lib/overview';
   import { saveSettings } from '../../lib/storage/store';
   import { applyTheme } from '../../lib/theme';
-  import { t, initI18n } from '../../lib/i18n.svelte';
+  import { t } from '../../lib/i18n.svelte';
+  import { applyUiLanguage } from '../../lib/ui';
   import { resetSettings } from '../../lib/reset';
   import type { Overview, ThemePref, UiLang } from '../../lib/types';
   import PinGate from './PinGate.svelte';
@@ -46,7 +47,7 @@
     if (!overview) return;
     const next: UiLang | null = lang === 'zh_CN' || lang === 'en' ? lang : null;
     await saveSettings({ ...overview.settings, language: next });
-    await initI18n(next); // 模块级 $state 更新 → 全树按新语言重渲染
+    await applyUiLanguage(next); // 模块级 $state 更新 → 全树按新语言重渲染；同步文档语言
     await reload();
   }
 

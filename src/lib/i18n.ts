@@ -25,6 +25,11 @@ export function resolveLang(raw: string | null | undefined): UiLang {
   return DEFAULT_LANG;
 }
 
+/** 界面语言 → `<html lang>` 的 BCP-47 标签：zh_CN → zh-CN，en → en。 */
+export function htmlLangFor(lang: UiLang): 'zh-CN' | 'en' {
+  return lang === 'zh_CN' ? 'zh-CN' : 'en';
+}
+
 export interface MessageCatalog {
   [key: string]: string;
 }
