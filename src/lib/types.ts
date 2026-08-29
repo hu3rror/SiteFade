@@ -5,6 +5,24 @@
 /** 规则来源标记：'manual'（手动）或 `remote:<sourceId>`（远程源）。 */
 export type SourceRef = 'manual' | `remote:${string}`;
 
+/**
+ * 错误标识（CONTEXT.md「错误标识」）：业务层错误输出用的稳定字典 key 联合类型。
+ * 只覆盖「纯 key 字段」实际用到的 key（parser / manage）；
+ * 混合字段（key 或原始串，如 FetchOutcome.detail、PopupResponse.error）保持 string。
+ */
+export type ErrorKey =
+  | 'error_badScheme'
+  | 'error_hasWhitespace'
+  | 'error_httpOnly'
+  | 'error_invalidHost'
+  | 'error_invalidIpv6'
+  | 'error_invalidPort'
+  | 'error_invalidPortEntry'
+  | 'error_invalidUrl'
+  | 'error_missingHost'
+  | 'error_tooLong'
+  | 'error_urlExists';
+
 /** 手动规则条目（随账号同步）。 */
 export interface ManualRule {
   id: string;

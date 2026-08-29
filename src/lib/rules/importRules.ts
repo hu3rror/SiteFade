@@ -10,12 +10,13 @@ import { MANUAL_LIMIT } from '../constants';
 import { parseRules } from './parser';
 import { loadManualRules, saveManualRules } from '../storage/store';
 import { genId } from '../id';
+import type { ErrorKey } from '../types';
 
 export interface ManualImportResult {
   added: number;
   duplicate: number;
   invalid: number;
-  invalidDetail: { line: string; reason: string }[];
+  invalidDetail: { line: string; reason: ErrorKey }[];
   /** 超出手动上限（整批被拒绝，added=0）。 */
   limitHit: boolean;
   /** 最终手动规则总数（含此前已有）。 */

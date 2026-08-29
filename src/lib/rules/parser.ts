@@ -13,6 +13,7 @@
  */
 
 import { MAX_RULE_LENGTH } from '../constants';
+import type { ErrorKey } from '../types';
 
 export type RuleKind = 'host' | 'exact-host' | 'exact-url';
 export type HostSemantics = 'plus' | 'dot' | 'star';
@@ -33,7 +34,7 @@ export interface ParsedRule {
 
 export interface ParseIssue {
   line: string;
-  reason: string;
+  reason: ErrorKey;
 }
 
 export interface ParseResult {
@@ -45,7 +46,7 @@ export interface ParseResult {
 }
 
 /** 单行解析：返回规则 / 错误 / null（空行或注释）。 */
-export function parseLine(line: string): ParsedRule | { error: string } | null {
+export function parseLine(line: string): ParsedRule | { error: ErrorKey } | null {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith('#')) return null;
   if (trimmed.length > MAX_RULE_LENGTH) return { error: 'error_tooLong' };
@@ -145,7 +146,7 @@ export function hostnameOfUrl(url: string): string | null {
   }
 }
 
-function parseExactUrl(line: string): ParsedRule | { error: string } {
+function parseExactUrl(line: string): ParsedRule | { error: ErrorKey } {
   let u: URL;
   try {
     u = new URL(line);

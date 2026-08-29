@@ -12,7 +12,7 @@
 import { browser } from 'wxt/browser';
 import { loadSources, saveSources, deleteRemoteCache } from '../storage/store';
 import { genId } from '../id';
-import type { RemoteSource } from '../types';
+import type { ErrorKey, RemoteSource } from '../types';
 import { applySourceFetch } from './refresh';
 import type { FetchOutcome, FetchFn } from './fetcher';
 
@@ -20,7 +20,7 @@ export interface AddSourceResult {
   ok: boolean;
   source: RemoteSource | null;
   outcome: FetchOutcome | null;
-  error?: string;
+  error?: ErrorKey;
 }
 
 /** 默认名称 = 源 URL 主机名。 */

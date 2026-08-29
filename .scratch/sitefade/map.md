@@ -38,6 +38,7 @@
 - [UI 表面原型（popup + 设置页）](./issues/09-ui-prototype.md)：popup=状态+开关（“不记入历史”措辞、无最近命中）；设置页=单列流、规则分页（默认每页 50）；PIN 锁：4–6 位、默认关、SHA-256 仅本地、错 5 次锁 30s、popup 重置
 - [架构深化 C1：UI 偏好引导](./issues/12-ui-preference-bootstrap.md)：抽 `initUi()` 深模块吸收两条入口重复的偏好应用序列；`applyUiLanguage` 修切语言后 html lang 残留缺陷；纯函数 `htmlLangFor` 进 i18n.ts
 - [架构深化 C2：操作提示集中化](./issues/13-toast-centralization.md)：模块级 toast 存储（toast.svelte.ts）吸收计时与渲染态；三个 section 移除 `onToast` prop；固定 3s 自动隐藏
+- [架构深化 C3：错误标识 seam 类型化](./issues/14-error-key-seam.md)：`ErrorKey` 联合类型显式标注纯 key 字段（parser/manage 共 12 key）；混合字段保持 string；t() 契约不动
   - **实现修订（2025-08 用户实测后）**：规则分页默认改为每页 10；区块改序（添加规则→规则清单→设置锁→导出，远程源并入“添加规则”区块、规则清单不再有手动添加输入）；“导入清单”更名“添加规则”；PIN 固定 4 位（去掉位数选择），改用圆点+数字键盘的 PinPad（隐藏明文、填满自动提交）；重置设置入口移至 PIN 锁定屏与设置页底部（popup 不再提供）
 
 ## Not yet specified
