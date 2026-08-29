@@ -27,7 +27,7 @@ Blocked by: none
 - **保持 VERSION=1**，`decodeSettings` 加可选字段、缺省兜底（老 blob 无新字段 → 默认值，零迁移、数据无损）；v2 迁移机制留给未来真正的破坏性变更。
 
 **文档**
-- 新术语登记 `CONTEXT.md`：**主题偏好（theme preference）**、**界面语言（UI language）**。
+- 新术语登记 `CONTEXT.md`：**主题偏好（theme preference）**、**界面语言偏好（UI language preference）** 与**界面语言（UI language）**（偏好=存储选择/可能未设定，语言=生效展示值）、**错误标识（error key）**（业务层产稳定标识、界面层查字典翻译）。
 - README 补「随账号同步数据」说明：主题偏好、界面语言随设置同步；PIN 哈希与远程内容仅本机。
 
 ## Comments
