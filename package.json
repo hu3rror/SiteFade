@@ -2,7 +2,7 @@
   "name": "sitefade",
   "description": "SiteFade：访问清单内站点后立即从历史中删除其访问记录（不记入历史）。Chromium + Firefox，Manifest V3。",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "scripts": {
     "dev": "wxt",
